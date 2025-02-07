@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Basket</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAi_Uk7-4-mrTAY8s2tra6VMOvHixjei8E&libraries=places"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+        <a href="/">Home</a>
+        <% if (user) { %>
+            <% if (user.isAdmin) { %>
+                <!-- Admin-specific link -->
+                <a href="/admin/dashboard">Admin Dashboard</a>
+            <% } %>
+            <a href="/users/profile"><span class="material-symbols-outlined">
+                account_circle
+                </span></a>
+            <a href="/users/logout">Logout</a>
+            <a href="/basket">Basket</a>
+        <% } else { %>
+            <a href="/users/login">Login</a>
+            <a href="/users/register">Register</a>
+            <a href="/basket">Basket</a>
+        <% } %>
+    </nav>
+</header>
+  <main class="basket-container">
+    <h1>Your Basket</h1>
+    <% if (basket && basket.items.length > 0) { %>
+        <table class="basket-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% basket.items.forEach(item => { %>
+                    <tr>
+                        <td><%= item.productId.name %></td>
+                        <td>
+                            <form action="/basket/update" method="post" class="inline-form">
+                                <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                <input type="number" name="quantity" value="<%= item.quantity %>" min="1" required>
+                                <button type="submit" class="btn btn-update">Update</button>
+                            </form>
+                        </td>
+                        <td>$<%= item.productId.price.toFixed(2) %></td>
+                        <td>$<%= (item.productId.price * item.quantity).toFixed(2) %></td>
+                        <td>
+                            <form action="/basket/remove" method="post" class="inline-form">
+                                <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                <button type="submit" class="btn btn-remove">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <div class="basket-summary">
+            <p class="total-price">Total Price: $<%= basket.totalPrice.toFixed(2) %></p>
+            <form action="/basket/clear" method="post" class="inline-form">
+                <button type="submit" class="btn btn-clear">Clear Basket</button>
+            </form>
+        </div>
+    <% } else { %>
+        <p class="empty-basket">Your basket is empty!</p>
+    <% } %>
+</main>
+
+    </main>
+    <div class="map-container">
+        <!-- Map Section -->
+        <h2>Find the Best Shoe Stores 🏬👟</h2>
+
+        <div id="filter-controls">
+            <input type="text" id="cityInput" placeholder="Enter city (e.g. Tokyo)">
+            <button onclick="searchStores()">Search</button>
+            <button onclick="useUserLocation()">Use My Location</button>
+            <label>Distance (km):</label>
+            <select id="distanceFilter">
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="20">20 km</option>
+            </select>
+            <label>Minimum Rating:</label>
+            <select id="ratingFilter">
+                <option value="0">Any</option>
+                <option value="3.5">3.5+</option>
+                <option value="4">4.0+</option>
+                <option value="4.5">4.5+</option>
+            </select>
+            <button onclick="applyFilters()">Filter</button>
+        </div>
+    
+        <div id="container">
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+            <div id="store-list-container">
+                <h3>Nearby Shoe Stores</h3>
+                <div id="store-list"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

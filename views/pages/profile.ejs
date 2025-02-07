@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/users/logout">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Add a unique ID to the main tag -->
+    <main id="profile-page">
+        <h1>Edit Profile</h1>
+        <% if (user) { %>
+            <form id="profile-form" action="/users/profile" method="post">
+                <div class="form-group">
+                    <label for="username">New Username:</label>
+                    <input type="text" id="profile-username" name="username" value="<%= user.username %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">New Password:</label>
+                    <input type="password" id="profile-password" name="password" placeholder="Enter new password">
+                </div>
+                <button type="submit" id="profile-submit-btn" class="btn">Update</button>
+            </form>
+        <% } else { %>
+            <p>You must be logged in to edit your profile.</p>
+        <% } %>
+    </main>
+</body>
+</html>

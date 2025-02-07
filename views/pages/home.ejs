@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shoe Store</title>
+   
+<script src="/public/js/map.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+   
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <% if (user) { %>
+                <% if (user.isAdmin) { %>
+                    <!-- Admin-specific link -->
+                    <a href="/admin/dashboard">Admin Dashboard</a>
+                <% } %>
+                <a href="/users/profile"><span class="material-symbols-outlined">
+                    account_circle
+                    </span></a>
+                <a href="/users/logout">Logout</a>
+                <a href="/basket">Basket</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+                <a href="/basket">Basket</a>
+            <% } %>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Product Section -->
+        <section class="products-section">
+            <h1>Products</h1>
+            <div class="products-container">
+                <% products.forEach(product => { %>
+                    <div class="product-card">
+                        <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                        <h2><%= product.name %></h2>
+                        <p><%= product.description %></p>
+                        <p>Price: $<%= product.price %></p>
+                        <form action="/basket/add" method="post">
+                            <input type="hidden" name="productId" value="<%= product._id %>">
+                            <input type="number" name="quantity" value="1" min="1">
+                            <button type="submit" class="btn btn-primary">Add to Basket</button>
+                        </form>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+    
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAi_Uk7-4-mrTAY8s2tra6VMOvHixjei8E&libraries=places"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <% if (user) { %>
+                <% if (user.isAdmin) { %>
+                    <!-- Admin-specific link -->
+                    <a href="/admin/dashboard">Admin Dashboard</a>
+                <% } %>
+                <a href="/users/profile"><span class="material-symbols-outlined">
+                    account_circle
+                    </span></a>
+                <a href="/users/logout">Logout</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main class="admin-container">
+        <!-- User Management Section -->
+        <section class="user-management">
+            <h2>User Management</h2>
+            <div id="notification" class="notification hidden">
+                <p id="notification-message"></p>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Admin Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.isAdmin ? 'Admin' : 'User' %></td>
+                            <td>
+                                <% if (user.isAdmin) { %>
+                                    <!-- Remove Admin Button -->
+                                    <form action="/admin/remove-admin/<%= user._id %>" method="post" class="action-form">
+                                        <button id="remove-admin-<%= user._id %>" type="submit" class="btn btn-danger" data-message="Admin privileges removed for <%= user.username %>">
+                                            Remove Admin
+                                        </button>
+                                    </form>
+                                    <form action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
+                                        <button id="delete-user-<%= user._id %>" type="submit" class="btn btn-danger" data-message="User <%= user.username %> has been deleted">
+                                            Delete User
+                                        </button>
+                                    </form>
+                                <% } else { %>
+                                    <!-- Promote to Admin Button -->
+                                    <form action="/admin/promote-user" method="post" class="action-form">
+                                        <input type="hidden" name="userId" value="<%= user._id %>">
+                                        <button id="promote-admin-<%= user._id %>" type="submit" class="btn btn-primary" data-message="User <%= user.username %> promoted to Admin">
+                                            Promote to Admin
+                                        </button>
+                                    </form>
+                                    <form action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
+                                        <button id="delete-user-<%= user._id %>" type="submit" class="btn btn-danger" data-message="User <%= user.username %> has been deleted">
+                                            Delete User
+                                        </button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Product Management Section -->
+        <section class="product-management">
+            <h2>Product Management</h2>
+            <form action="/admin/add-product" method="post" class="add-product-form">
+                <input type="text" name="name" placeholder="Product Name" required>
+                <input type="number" name="price" placeholder="Price" required>
+                <textarea name="description" placeholder="Description"></textarea>
+                <input type="text" name="imageUrl" placeholder="Image URL">
+                <button type="submit" class="btn btn-add">Add Product</button>
+            </form>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% products.forEach(product => { %>
+                        <tr>
+                            <td><%= product.name %></td>
+                            <td>$<%= product.price %></td>
+                            <td>
+                                <form action="/admin/delete-product/<%= product._id %>" method="post" class="action-form">
+                                    <button id="delete-product-<%= product._id %>" type="submit" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                                <a href="/admin/edit-product/<%= product._id %>" class="btn btn-edit">Edit</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="admin-footer">
+        <p>Admin Panel © 2025</p>
+    </footer>
+</body>
+</html>
