@@ -2,15 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const { isAuthenticated } = require('../middlewares/auth');
-
+const { isAuthenticated } = require('../middlewares/auth'); // Import middleware
 
 router.get('/register', (req, res) => {
     res.render('pages/register', { title: 'Register' });
 });
-
-
-
 
 router.post('/register', async (req, res) => {
     try {
@@ -25,7 +21,7 @@ router.post('/register', async (req, res) => {
         console.log('Generated Hashed Password:', hashedPassword);
 
         // Save the new user
-        const newUser = new User({ username, password: password, isAdmin });
+        const newUser = new User({ username, password: password, isAdmin }); // Save hashed password
         await newUser.save();
 
         console.log('Saved User:', newUser);
@@ -35,8 +31,6 @@ router.post('/register', async (req, res) => {
         res.status(500).send('An error occurred during registration.');
     }
 });
-
-
 
 router.get('/login', (req, res) => {
     res.render('pages/login', { title: 'Login' });
@@ -77,14 +71,39 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
-
-
-// Logout Route
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
     });
+});
+
+router.get('/profile', isAuthenticated, (req, res) => {
+    res.render('pages/profile', { user: req.session.user });
+});
+
+router.post('/profile', isAuthenticated, async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const userId = req.session.user._id;
+
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateData.password = hashedPassword;
+        }
+
+        // Update the user in the database
+        await User.findByIdAndUpdate(userId, updateData);
+
+        // Update session data
+        if (username) req.session.user.username = username;
+
+        res.redirect('/users/profile');
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).send('Internal server error');
+    }
 });
 
 module.exports = router;
