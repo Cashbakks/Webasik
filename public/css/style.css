@@ -768,3 +768,50 @@ button:hover {
 }
 .highlight {
     background-color: #ffff99 !important;}
+    /* Popup Styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup.success-popup {
+    border: 3px solid green;
+}
+
+.popup.error-popup {
+    border: 3px solid red;
+}
+
+.popup-content p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.popup-content .btn-close {
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-content .btn-close:hover {
+    background: darkred;
+}

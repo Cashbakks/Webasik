@@ -33,3 +33,30 @@ document.querySelectorAll('.action-form').forEach(form => {
         }, 2000); // 2 seconds delay
     });
 });
+ // Get popup elements
+ const popup = document.getElementById('popup');
+ const popupMessage = document.getElementById('popup-message');
+ const popupClose = document.getElementById('popup-close');
+
+ // Handle popup close button
+ popupClose.addEventListener('click', () => {
+     popup.classList.add('hidden');
+ });
+
+ // Display popup for errors or success messages
+ const urlParams = new URLSearchParams(window.location.search);
+ const message = urlParams.get('message');
+ const type = urlParams.get('type'); // success or error
+
+ if (message) {
+     popupMessage.textContent = message;
+
+     // Add success or error class
+     if (type === 'success') {
+         popup.classList.add('success-popup');
+     } else if (type === 'error') {
+         popup.classList.add('error-popup');
+     }
+
+     popup.classList.remove('hidden');
+ }
