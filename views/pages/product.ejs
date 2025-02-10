@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.name %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <% if (user && user.isAdmin) { %>
+                <a href="/admin/dashboard">Admin Dashboard</a>
+            <% } %>
+            <% if (user) { %>
+                <a href="/users/profile">Profile</a>
+                <a href="/users/logout">Logout</a>
+                <a href="/basket">Basket</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main id="product-detail-page">
+        <h1><%= product.name %></h1>
+        <div class="product-detail-container">
+            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image-page">
+            <div class="product-details">
+                <p><strong>Description:</strong> <%= product.description %></p>
+                <p><strong>Type:</strong> <%= product.type %></p>
+                <p><strong>Price:</strong> $<%= product.price.toFixed(2) %></p>
+                <p><strong>Available Sizes:</strong> <%= product.sizes.join(', ') %></p>
+                <p><strong>Model:</strong> <%= product.model %></p>
+                <p><strong>Color:</strong> <%= product.color %></p>
+                <p><strong>Category:</strong> <%= product.category %></p>
+                <form action="/basket/add" method="post">
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1">
+                    <button type="submit" class="btn btn-primary">Add to Basket</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>© <%= new Date().getFullYear() %> All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

@@ -72,6 +72,10 @@
                             <form action="/basket/add" method="post" class="basket-form">
                                 <input type="hidden" name="productId" value="<%= product._id %>">
                                 <input type="number" name="quantity" value="1" min="1" class="quantity-input">
+                              
+                                <a href="/home/product/<%= product._id %>"  class="btn btn-primary">View Details</a>
+
+                                
                                 <button type="submit" class="btn btn-primary">Add to Basket</button>
                             </form>
                         </div>

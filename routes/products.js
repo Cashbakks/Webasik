@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
-const { isAdmin } = require('../middlewares/auth');
-
+const { isAuthenticated, isAdmin } = require('../middlewares/auth');
 // Add product (accessible only by admins)
 router.post('/add', isAdmin, async (req, res) => {
     try {
-        const { name, price, description, imageUrl, sizes, model,company, color, category } = req.body;
+        const { name, price, description, imageUrl, sizes, model, company, color, category } = req.body;
         const newProduct = new Product({ 
             name, 
             price, 
@@ -37,4 +36,21 @@ router.get('/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
+
+router.get('/product/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            res.status(404).send('Product not found');
+        } else {
+            res.render('pages/product-detail', { title: product.name, product });
+        }
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        res.status(500).send('Error processing your request');
+    }
+});
+
+
 module.exports = router;
+

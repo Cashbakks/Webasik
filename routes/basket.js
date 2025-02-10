@@ -6,7 +6,7 @@ const User = require('../models/User'); // Import the User model
 // Add an item to the basket
 router.post('/add', async (req, res) => {
     if (!req.session.user) {
-        return res.status(401).send('You must be logged in to add items to the basket');
+        return res.redirect('/users/login');
     }
 
     try {
