@@ -14,11 +14,41 @@
 
     <main>
         <form action="/admin/edit-product/<%= product._id %>" method="post">
-            <input type="text" name="name" value="<%= product.name %>" required>
-            <input type="number" name="price" value="<%= product.price %>" required>
-            <textarea name="description" placeholder="Description"><%= product.description %></textarea>
-            <input type="text" name="imageUrl" value="<%= product.imageUrl %>">
-            <button type="submit">Save Changes</button>
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" value="<%= product.name %>" required>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" value="<%= product.price %>" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"><%= product.description %></textarea>
+
+            <label for="imageUrl">Image URL:</label>
+            <input type="text" id="imageUrl" name="imageUrl" value="<%= product.imageUrl %>">
+
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type" value="<%= product.type %>">
+
+            <label for="sizes">Sizes (comma-separated, e.g., 7,8,9):</label>
+            <input type="text" id="sizes" name="sizes" value="<%= product.sizes.join(',') %>">
+
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model" value="<%= product.model %>">
+
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" value="<%= product.company %>">
+
+            <label for="color">Color:</label>
+            <input type="text" id="color" name="color" value="<%= product.color %>">
+
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="Men" <%= product.category === 'Men' ? 'selected' : '' %>>Men</option>
+                <option value="Women" <%= product.category === 'Women' ? 'selected' : '' %>>Women</option>
+                <option value="Unisex" <%= product.category === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+            </select>
+
+            <button type="submit" class="btn">Save Changes</button>
         </form>
     </main>
 

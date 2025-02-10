@@ -6,8 +6,18 @@ const { isAdmin } = require('../middlewares/auth');
 // Add product (accessible only by admins)
 router.post('/add', isAdmin, async (req, res) => {
     try {
-        const { name, price, description, imageUrl } = req.body;
-        const newProduct = new Product({ name, price, description, imageUrl });
+        const { name, price, description, imageUrl, sizes, model,company, color, category } = req.body;
+        const newProduct = new Product({ 
+            name, 
+            price, 
+            description, 
+            imageUrl, 
+            sizes: sizes.split(',').map(size => Number(size.trim())), // Assuming sizes are sent as comma-separated values
+            model,
+            company, 
+            color, 
+            category 
+        });
         await newProduct.save();
         res.redirect('/');
     } catch (error) {

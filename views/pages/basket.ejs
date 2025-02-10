@@ -6,7 +6,7 @@
     <title>Your Basket</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/map.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAi_Uk7-4-mrTAY8s2tra6VMOvHixjei8E&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4emWYmzAFTtydMRTYFbA5Jf9laUJUnDc&libraries=places"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
 </head>
 <body>
@@ -30,7 +30,7 @@
         <% } %>
     </nav>
 </header>
-  <main class="basket-container">
+<main class="basket-container">
     <h1>Your Basket</h1>
     <% if (basket && basket.items.length > 0) { %>
         <table class="basket-table">
@@ -46,19 +46,19 @@
             <tbody>
                 <% basket.items.forEach(item => { %>
                     <tr>
-                        <td><%= item.productId.name %></td>
+                        <td><%= item.productId ? item.productId.name : "Product not available" %></td>
                         <td>
                             <form action="/basket/update" method="post" class="inline-form">
-                                <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                <input type="hidden" name="productId" value="<%= item.productId ? item.productId._id : '' %>">
                                 <input type="number" name="quantity" value="<%= item.quantity %>" min="1" required>
                                 <button type="submit" class="btn btn-update">Update</button>
                             </form>
                         </td>
-                        <td>$<%= item.productId.price.toFixed(2) %></td>
-                        <td>$<%= (item.productId.price * item.quantity).toFixed(2) %></td>
+                        <td>$<%= item.productId ? item.productId.price.toFixed(2) : '0.00' %></td>
+                        <td>$<%= item.productId ? (item.productId.price * item.quantity).toFixed(2) : '0.00' %></td>
                         <td>
                             <form action="/basket/remove" method="post" class="inline-form">
-                                <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                <input type="hidden" name="productId" value="<%= item.productId ? item.productId._id : '' %>">
                                 <button type="submit" class="btn btn-remove">Remove</button>
                             </form>
                         </td>
@@ -78,39 +78,146 @@
 </main>
 
     </main>
-    <div class="map-container">
-        <!-- Map Section -->
-        <h2>Find the Best Shoe Stores 🏬👟</h2>
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+        }
 
-        <div id="filter-controls">
-            <input type="text" id="cityInput" placeholder="Enter city (e.g. Tokyo)">
-            <button onclick="searchStores()">Search</button>
-            <button onclick="useUserLocation()">Use My Location</button>
-            <label>Distance (km):</label>
-            <select id="distanceFilter">
-                <option value="5">5 km</option>
-                <option value="10">10 km</option>
-                <option value="20">20 km</option>
-            </select>
-            <label>Minimum Rating:</label>
-            <select id="ratingFilter">
-                <option value="0">Any</option>
-                <option value="3.5">3.5+</option>
-                <option value="4">4.0+</option>
-                <option value="4.5">4.5+</option>
-            </select>
-            <button onclick="applyFilters()">Filter</button>
-        </div>
-    
-        <div id="container">
-            <div id="map-container">
-                <div id="map"></div>
+        header {
+            text-align: center;
+            padding: 1rem;
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .map-container {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 1200px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #filter-controls {
+            margin-bottom: 20px;
+        }
+
+        #filter-controls input,
+        #filter-controls select,
+        #filter-controls button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #container {
+            display: flex;
+            gap: 20px;
+        }
+
+        #map-container {
+            flex: 2;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        #store-list-container {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .store-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .store-item:hover {
+            background: #e6f7ff;
+        }
+
+        .store-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .store-info {
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #007BFF;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4emWYmzAFTtydMRTYFbA5Jf9laUJUnDc&libraries=places,geometry"></script>
+   
+</head>
+<body>
+    <header>
+        <h1>Find the Best Shoe Stores 🏬👟</h1>
+    </header>
+    <main>
+        <div class="map-container">
+            <div id="filter-controls">
+                <input type="text" id="cityInput" placeholder="Enter city (e.g., Tokyo)" />
+                <button onclick="searchStores()">Search</button>
+                <button onclick="useUserLocation()">Use My Location</button>
+                <label for="distanceFilter">Distance (km):</label>
+                <select id="distanceFilter">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                </select>
+                <label for="ratingFilter">Minimum Rating:</label>
+                <select id="ratingFilter">
+                    <option value="0">Any</option>
+                    <option value="3.5">3.5+</option>
+                    <option value="4">4.0+</option>
+                    <option value="4.5">4.5+</option>
+                </select>
             </div>
-            <div id="store-list-container">
-                <h3>Nearby Shoe Stores</h3>
-                <div id="store-list"></div>
+            <div id="container">
+                <div id="map-container">
+                    <div id="map"></div>
+                </div>
+                <div id="store-list-container">
+                    <h3>Nearby Shoe Stores</h3>
+                    <div id="store-list"></div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+    <footer>
+        <p>© 2025 Shoe Store Finder. All rights reserved.</p>
+    </footer>
 </body>
 </html>

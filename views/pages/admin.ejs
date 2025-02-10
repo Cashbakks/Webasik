@@ -6,22 +6,17 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/script.js" defer></script>
-    
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
 </head>
 <body>
-    <header>
+    <header id="admin-header">
         <nav class="navbar">
             <a href="/">Home</a>
             <% if (user) { %>
                 <% if (user.isAdmin) { %>
-                    <!-- Admin-specific link -->
                     <a href="/admin/dashboard">Admin Dashboard</a>
                 <% } %>
-                <a href="/users/profile"><span class="material-symbols-outlined">
-                    account_circle
-                    </span></a>
+                <a href="/users/profile"><span class="material-symbols-outlined">account_circle</span></a>
                 <a href="/users/logout">Logout</a>
             <% } else { %>
                 <a href="/users/login">Login</a>
@@ -30,16 +25,16 @@
         </nav>
     </header>
 
-    <!-- Main Section -->
-    <main class="admin-container">
+    <!-- Main Content -->
+    <main id="admin-container">
         <!-- User Management Section -->
-        <section class="user-management">
-            <h2>User Management</h2>
+        <section id="user-management">
+            <h2 id="user-management-title">User Management</h2>
             <div id="notification" class="notification hidden">
                 <p id="notification-message"></p>
             </div>
 
-            <table class="admin-table">
+            <table id="user-table" class="admin-table">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -54,27 +49,25 @@
                             <td><%= user.isAdmin ? 'Admin' : 'User' %></td>
                             <td>
                                 <% if (user.isAdmin) { %>
-                                    <!-- Remove Admin Button -->
-                                    <form action="/admin/remove-admin/<%= user._id %>" method="post" class="action-form">
-                                        <button id="remove-admin-<%= user._id %>" type="submit" class="btn btn-danger" data-message="Admin privileges removed for <%= user.username %>">
+                                    <form id="remove-admin-form-<%= user._id %>" action="/admin/remove-admin/<%= user._id %>" method="post" class="action-form">
+                                        <button id="remove-admin-btn-<%= user._id %>" type="submit" class="btn btn-danger">
                                             Remove Admin
                                         </button>
                                     </form>
-                                    <form action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
-                                        <button id="delete-user-<%= user._id %>" type="submit" class="btn btn-danger" data-message="User <%= user.username %> has been deleted">
+                                    <form id="delete-user-form-<%= user._id %>" action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
+                                        <button id="delete-user-btn-<%= user._id %>" type="submit" class="btn btn-danger">
                                             Delete User
                                         </button>
                                     </form>
                                 <% } else { %>
-                                    <!-- Promote to Admin Button -->
-                                    <form action="/admin/promote-user" method="post" class="action-form">
+                                    <form id="promote-user-form-<%= user._id %>" action="/admin/promote-user" method="post" class="action-form">
                                         <input type="hidden" name="userId" value="<%= user._id %>">
-                                        <button id="promote-admin-<%= user._id %>" type="submit" class="btn btn-primary" data-message="User <%= user.username %> promoted to Admin">
+                                        <button id="promote-user-btn-<%= user._id %>" type="submit" class="btn btn-primary">
                                             Promote to Admin
                                         </button>
                                     </form>
-                                    <form action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
-                                        <button id="delete-user-<%= user._id %>" type="submit" class="btn btn-danger" data-message="User <%= user.username %> has been deleted">
+                                    <form id="delete-user-form-<%= user._id %>" action="/admin/delete-user/<%= user._id %>" method="post" class="action-form">
+                                        <button id="delete-user-btn-<%= user._id %>" type="submit" class="btn btn-danger">
                                             Delete User
                                         </button>
                                     </form>
@@ -87,46 +80,69 @@
         </section>
 
         <!-- Product Management Section -->
-        <section class="product-management">
-            <h2>Product Management</h2>
-            <form action="/admin/add-product" method="post" class="add-product-form">
-                <input type="text" name="name" placeholder="Product Name" required>
-                <input type="number" name="price" placeholder="Price" required>
-                <textarea name="description" placeholder="Description"></textarea>
-                <input type="text" name="imageUrl" placeholder="Image URL">
-                <button type="submit" class="btn btn-add">Add Product</button>
-            </form>
+        <header>
+            <h1>Product Management</h1>
+        </header>
+        <main>
+            <!-- Product Management Section -->
+            <!-- Add Product Form -->
+<form id="add-product-form" action="/admin/add-product" method="post" class="add-product-form">
+    <input id="product-name" type="text" name="name" placeholder="Product Name" required>
+    <input id="product-price" type="number" name="price" placeholder="Price" required>
+    <textarea id="product-description" name="description" placeholder="Description"></textarea>
+    <input id="product-image" type="text" name="imageUrl" placeholder="Image URL">
+    <select id="product-type" name="type" required>
+        <option value="">Select Type</option>
+        <option value="Sneakers">Sneakers</option>
+        <option value="Formal">Formal</option>
+        <option value="Boots">Boots</option>
+        <option value="Sandals">Sandals</option>
+    </select>
+    <input id="product-sizes" type="text" name="sizes" placeholder="Sizes (comma-separated, e.g., 7,8,9)">
+    <input id="product-model" type="text" name="model" placeholder="Model">
+    <input id="product-color" type="text" name="color" placeholder="Color">
+    <select id="product-category" name="category">
+        <option value="Men">Men</option>
+        <option value="Women">Women</option>
+        <option value="Unisex">Unisex</option>
+    </select>
+    <button type="submit" class="btn btn-add">Add Product</button>
+</form>
 
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% products.forEach(product => { %>
+        
+                <table id="product-table" class="admin-table">
+                    <thead>
                         <tr>
-                            <td><%= product.name %></td>
-                            <td>$<%= product.price %></td>
-                            <td>
-                                <form action="/admin/delete-product/<%= product._id %>" method="post" class="action-form">
-                                    <button id="delete-product-<%= product._id %>" type="submit" class="btn btn-danger">
-                                        Delete
-                                    </button>
-                                </form>
-                                <a href="/admin/edit-product/<%= product._id %>" class="btn btn-edit">Edit</a>
-                            </td>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Actions</th>
                         </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        </section>
-    </main>
+                    </thead>
+                    <tbody>
+                        <% products.forEach(product => { %>
+                            <tr>
+                                <td><%= product.name %></td>
+                                <td>$<%= product.price %></td>
+                                <td>
+                                    <form id="delete-product-form-<%= product._id %>" action="/admin/delete-product/<%= product._id %>" method="post" class="action-form">
+                                        <button id="delete-product-btn-<%= product._id %>" type="submit" class="btn btn-danger" title="Delete Product">
+                                            Delete
+                                        </button>
+                                    </form>
+                                    <a id="edit-product-link-<%= product._id %>" href="/admin/edit-product/<%= product._id %>" class="btn btn-edit" title="Edit Product">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+        
 
     <!-- Footer Section -->
-    <footer class="admin-footer">
+    <footer id="admin-footer">
         <p>Admin Panel © 2025</p>
     </footer>
 </body>

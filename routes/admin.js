@@ -57,14 +57,31 @@ router.get('/edit-product/:id', isAuthenticated, isAdmin, async (req, res) => {
 // Update product
 router.post('/edit-product/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
-        const { name, price, description, imageUrl } = req.body;
-        await Product.findByIdAndUpdate(req.params.id, { name, price, description, imageUrl });
+        const { name, price, description, imageUrl, type, sizes, model, company, color, category } = req.body;
+
+        // Parsing sizes to convert from comma-separated string to array of numbers if needed
+        const sizesArray = sizes.split(',').map(size => parseInt(size.trim()));
+
+        await Product.findByIdAndUpdate(req.params.id, {
+            name,
+            price,
+            description,
+            imageUrl,
+            type,
+            sizes: sizesArray, // Make sure sizes are stored as an array of numbers
+            model,
+            company,
+            color,
+            category
+        });
+
         res.redirect('/admin/dashboard');
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).send('Error processing your request');
     }
 });
+
 
 // Delete a user
 router.post('/delete-user/:id', isAuthenticated, isAdmin, async (req, res) => {
