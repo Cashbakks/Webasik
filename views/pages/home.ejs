@@ -29,8 +29,30 @@
                 <a href="/basket">Basket</a>
             <% } %>
         </nav>
+        
     </header>
-
+    <main>
+    <div class="carousel">
+        <div class="container-carousel">
+            <div class="shoe-selector" id="shoeSelector">
+                <!-- Thumbnails for shoes, dynamically updated -->
+            </div>
+            <div class="shoe-display">
+                <img id="main-shoe-image" src="" alt="Selected Shoe">
+            </div>
+            <div class="shoe-info">
+                <h1 id="shoe-name"></h1>
+                <p id="shoe-description"></p>
+                <p id="shoe-price"></p>
+                <button class="btn-cs" onclick="rotateNext()">Next Shoe</button>
+            </div>
+        </div>
+        <img src="">
+        <script src="script.js"></script>
+    </div>
+    <script src="js/carousel.js">
+    </script>
+    </main>
     <main>
         <!-- Product Section -->
         <section class="products-section">
@@ -65,7 +87,7 @@
                         <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
                         <div class="product-info">
                             <h2><%= product.name %></h2>
-                            <p><%= product.description %></p>
+                            <p><strong>Category:</strong> <%= product.category %></p>
                         </div>
                         <div class="price-and-basket">
                             <span class="price">Price: $<%= product.price.toFixed(2) %></span>
@@ -134,4 +156,7 @@ document.getElementById('filterButton').addEventListener('click', filterProducts
 
 
 </body>
+<footer>
+    <p>© <%= new Date().getFullYear() %> All Rights Reserved.</p>
+</footer>
 </html>

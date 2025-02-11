@@ -23,6 +23,7 @@ h1, h2 {
     padding: 1rem 2rem;
     border-radius: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15px 15px 15px 15px;
 }
 
 .navbar a {
@@ -427,3 +428,216 @@ button:hover,
     width: 200px;
     height: auto;
 }
+.map-container {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#filter-controls {
+    margin-bottom: 20px;
+}
+
+#filter-controls input,
+#filter-controls select,
+#filter-controls button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#container {
+    display: flex;
+    gap: 20px;
+}
+
+#map-container {
+    flex: 2;
+    height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* Basic global styling */
+
+/* Layout container for organizing the visual elements */
+.container-carousel {
+    background-color: #333;
+    display: flex;
+    height: 100vh;
+    align-items: center; /* Center content vertically */
+    justify-content: space-around; /* Distribute space around items */
+    border-radius: 3rem;
+    margin: 40px;
+}
+
+/* Styling for the carousel containing shoe images */
+.shoe-selector {
+    margin-top: 45em;
+    position: static;
+    top: 50%;
+    left: 10%; /* Adjusted to give more space */
+    transform: translateY(-50%); /* Centering the carousel vertically */
+    display: flex;
+    flex-direction: column; /* Arrange images vertically */
+    align-items: center;
+    z-index: 100; /* Ensures carousel is above other content */
+    transition: transform 0.5s ease; /* Smooth transition for the whole carousel */
+}
+
+/* Individual shoe images within the carousel */
+.shoe-selector img {
+    width: 120px; /* Width for non-selected shoes */
+    height: 180px; /* Height for non-selected shoes */
+    margin: 15px 0; /* Vertical spacing between images */
+    cursor: pointer;
+    opacity: 0.6; /* Dim non-focused images */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Transition for scale and opacity */
+}
+
+/* Highlight the center image to draw attention */
+.shoe-selector img.center {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.2); /* Move up slightly and scale */
+    animation: fadeInScale 0.5s ease forwards; /* Fade-in and scale effect for center image */
+}
+.shoe-selector img {
+    animation: rollIn 0.5s ease forwards;
+}
+@keyframes rollIn {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+/* Keyframes for fade-in and scale effect */
+@keyframes fadeInScale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* Area for displaying the selected shoe's information */
+
+/* Styling for the shoe information area in a K-Pop inspired theme */
+.shoe-info {
+    margin-top: 20em;
+    position: static;
+    right: 5%; /* Right side of the screen */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px; /* Width of the information panel */
+    padding: 20px;
+    background: rgba(10, 10, 10, 0.9); /* Dark, nearly black background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 153, 255, 0.415); /* Subtle cyan glow for depth */
+    color: #E0E0E0; /* Soft white text color */
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    border: 1px solid #333; /* Dark border to blend with the background */
+    animation: fadeIn 1s ease-in-out;
+    z-index: 101;
+}
+
+/* Updated heading styling */
+.shoe-info h1 {
+    font-size: 2em; /* Slightly larger for better readability */
+    color: #00BFFF; /* Bright blue for a pop of color */
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px; /* Increased letter spacing for a more dramatic effect */
+}
+
+/* Updated paragraph styling */
+.shoe-info p {
+    font-size: 1.2em;
+    color: #FFFFFF; /* Pure white for maximum contrast */
+    margin-bottom: 10px; /* Consistent spacing */
+}
+
+/* Keyframe animation for fade-in effect */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-60%); }
+    to { opacity: 1; transform: translateY(-50%); }
+}
+
+/* Button styling within the shoe info area */
+.btn-cs {
+    width: 100%;
+    padding: 12px;
+    background-color: #1E90FF; /* Vivid blue background */
+    color: white; /* White text for high contrast */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    letter-spacing: 1px; /* Spacing for a modern look */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-cs:hover {
+    background-color: #00BFFF; /* Lighter blue on hover */
+    transform: translateY(-2px); /* Slight lift when hovered */
+}
+
+/* Keyframes for info fade-in effect */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Styling for buttons within the shoe info area */
+
+
+/* Styling for the main shoe image display */
+.shoe-display img {
+    max-width: 100%; /* Ensures image is responsive and fits within the container */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Ensures the image is treated as a block-level element */
+    margin: 0 auto; /* Centers the image horizontally */
+    opacity: 0; /* Start with the image invisible */
+    transform: scale(0.8); /* Start scaled down */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition for opacity and transform */
+}
+
+/* CSS class to apply when updating the image */
+.shoe-image-active {
+    opacity: 1; /* Full visibility */
+    transform: scale(1.3); /* Scale to normal size */
+    animation: fadeInZoom 0.5s ease forwards; /* Animation applied when the source changes */
+}
+
+/* Keyframes for fading and scaling the main shoe image */
+@keyframes fadeInZoom {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
