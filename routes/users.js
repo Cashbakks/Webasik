@@ -104,25 +104,25 @@ router.post('/profile', isAuthenticated, async (req, res) => {
     const { name, surname, email, username, password } = req.body;
 
     try {
-        const updateData = { name, surname, email, username };
+        const updateData = { name, surname, email, username, updatedAt: new Date() }; // ✅ Set updatedAt time
 
-        // Only hash the password if it's provided (for password changes)
+        // Hash password if user is updating it
         if (password) {
             updateData.password = await bcrypt.hash(password, 10);
         }
 
-        // Update the user and refresh session data
+        // Update user in database
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
-        req.session.user = updatedUser;  // Refresh session data
 
-        res.redirect('/users/profile');
+        // Refresh session data
+        req.session.user = updatedUser;
+        res.redirect('/profile');
     } catch (error) {
         console.error('Error updating user profile:', error);
         res.status(500).send('Failed to update profile');
-        // Optionally render an error page or pass error details to the profile page
-        res.render('pages/profile', { user: req.session.user, error: 'Failed to update profile' });
     }
 });
+
 
 
 

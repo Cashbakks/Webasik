@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <% if (user) { %>
+                <% if (user.isAdmin) { %>
+                    <!-- Admin-specific link -->
+                    <a href="/admin/dashboard">Admin Dashboard</a>
+                    <a href="/admin/analytics">View Analytics</a>
+
+                <% } %>
+                <a href="/users/profile"><span class="material-symbols-outlined">
+                    account_circle
+                    </span></a>
+                <a href="/users/logout">Logout</a>
+                <a href="/basket">Basket</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+                <a href="/basket">Basket</a>
+            <% } %>
+        </nav>
+        
+    </header>
+
+    <main class="analytics-container">
+        <h1> Analytics Dashboard</h1>
+
+        <!-- Most Popular Shoes Chart -->
+        <section class="analytics-section">
+            <h2> Most Popular Shoes</h2>
+            <canvas id="popularShoesChart"></canvas>
+        </section>
+        
+
+        <!-- Highest & Lowest Basket Price Users -->
+        <section class="analytics-section">
+            <h2> Highest & Lowest Spenders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Total Basket Price ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%= highestTotalUser ? highestTotalUser.username : "N/A" %></td>
+                        <td>$<%= highestTotalUser ? highestTotalUser.basket.totalPrice.toFixed(2) : "N/A" %></td>
+                    </tr>
+                    <tr>
+                        <td><%= lowestTotalUser ? lowestTotalUser.username : "N/A" %></td>
+                        <td>$<%= lowestTotalUser ? lowestTotalUser.basket.totalPrice.toFixed(2) : "N/A" %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Most & Least Currency Converting Users -->
+        <section class="analytics-section">
+            <h2> Most & Least Converting Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Conversions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%= mostConversionsUser ? mostConversionsUser.username : "N/A" %></td>
+                        <td><%= mostConversionsUser ? mostConversionsUser.conversions.length : "N/A" %></td>
+                    </tr>
+                    <tr>
+                        <td><%= leastConversionsUser ? leastConversionsUser.username : "N/A" %></td>
+                        <td><%= leastConversionsUser ? leastConversionsUser.conversions.length : "N/A" %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Basket Total Prices & API Conversion Data -->
+        <div class="chart-container">
+            <canvas id="basketChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="conversionChart"></canvas>
+        </div>
+    </main>
+
+    <script>
+        const userData = <%- JSON.stringify(userData) %>;
+
+        if (userData.length === 0) {
+            document.querySelector('.analytics-container').innerHTML += '<p>No data available.</p>';
+        }
+
+        // Basket Total Prices Graph
+        const ctx1 = document.getElementById('basketChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: userData.map(user => user.username),
+                datasets: [{
+                    label: 'Total Basket Price ($)',
+                    data: userData.map(user => user.basket.totalPrice || 0),
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // API Conversion Data Graph
+        const ctx2 = document.getElementById('conversionChart').getContext('2d');
+        const conversionLabels = [];
+        const conversionData = [];
+
+        userData.forEach(user => {
+            user.conversions.forEach(conversion => {
+                conversionLabels.push(`${user.username} - ${conversion.targetCurrency}`);
+                conversionData.push(conversion.convertedAmount);
+            });
+        });
+
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: conversionLabels,
+                datasets: [{
+                    label: 'Currency Conversion Amounts',
+                    data: conversionData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        const sortedShoePopularity = <%- JSON.stringify(sortedShoePopularity) %>;
+
+if (sortedShoePopularity.length === 0) {
+    document.querySelector('.analytics-container').innerHTML += '<p>No popular shoes data available.</p>';
+} else {
+    const ctx3 = document.getElementById('popularShoesChart').getContext('2d');
+    new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: sortedShoePopularity.map(shoe => shoe.name),
+            datasets: [{
+                label: 'Times Chosen',
+                data: sortedShoePopularity.map(shoe => shoe.count),
+                backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+    </script>
+
+</body>
+</html>

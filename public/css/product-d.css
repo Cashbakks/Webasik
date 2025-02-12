@@ -1,0 +1,145 @@
+/* ==== Product Detail Page Styling ==== */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Navbar Styling ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #1E1E2E;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+.navbar a {
+    color: #FFD700;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #ff007f;
+}
+
+.navbar .material-symbols-outlined {
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+
+
+#product-detail-page {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #1e1e2e;
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+/* Product Title */
+#product-detail-page h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+/* Container for image and details */
+.product-detail-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+/* Product Image */
+.product-image-page {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.product-image-page:hover {
+    transform: scale(1.05);
+}
+
+/* Product Details Section */
+.product-details {
+    max-width: 50%;
+    text-align: left;
+    padding: 20px;
+}
+
+.product-details p {
+    font-size: 18px;
+    color: #dddddd;
+    margin-bottom: 10px;
+}
+
+.product-details strong {
+    color: #FFD700;
+}
+
+/* Quantity Input */
+.product-details label {
+    font-size: 18px;
+    color: #FFD700;
+    margin-right: 10px;
+}
+
+.product-details input[type="number"] {
+    width: 70px;
+    padding: 5px;
+    border: 1px solid #FFD700;
+    background: #2A2A3A;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* Add to Basket Button */
+.btn-primary {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background: #ff007f;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background: #ff1493;
+    transform: scale(1.05);
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 15px;
+    background: #222;
+    color: white;
+    font-size: 14px;
+}

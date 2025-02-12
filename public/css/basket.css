@@ -1,0 +1,302 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 1rem;
+    background-color:#121212; 
+    color: white;
+}
+
+.map-container {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+    border-radius: 10px;
+    background: #1E1E2E;;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#filter-controls {
+    margin-bottom: 20px;
+}
+
+#filter-controls input,
+#filter-controls select,
+#filter-controls button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #faa11c;
+    border-radius: 5px;
+    background-color: #fffb07e0;
+}
+
+#container {
+    display: flex;
+    gap: 20px;
+}
+
+#map-container {
+    background-color: #1E1E2E;
+    flex: 2;
+    height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#store-list-container {
+    flex: 1;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #121212;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.store-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #350341;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.store-item:hover {
+    background: #350341;;
+}
+
+.store-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.store-info {
+    text-align: left;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #1E1E2E;
+    color: white;
+    margin-top: 20px;
+}
+.navbar {
+    background: #1E1E2E;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px;
+    transition: 0.3s;
+}
+
+.navbar a:hover {
+    color: #ff007f;
+}
+
+/* ====== Basket Container ====== */
+.basket-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #1E1E2E;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.basket-container h1 {
+    font-size: 28px;
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+/* ====== Basket Table ====== */
+.basket-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.basket-table th,
+.basket-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+}
+
+.basket-table th {
+    background: #2A2A3A;
+    color: #FFD700;
+    font-size: 16px;
+}
+
+.basket-table td {
+    background: #1E1E2E;
+}
+
+.basket-table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ====== Basket Summary ====== */
+.basket-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: #2A2A3A;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.total-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+/* ====== Buttons ====== */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-update {
+    background: #007BFF;
+    color: white;
+}
+
+.btn-remove {
+    background: #FF4C4C;
+    color: white;
+}
+
+.btn-clear {
+    background: #FFA500;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+/* ====== Currency Conversion Section ====== */
+.currency-conversion {
+    margin-top: 20px;
+    padding: 10px;
+    background: #2A2A3A;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.currency-conversion label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.currency-conversion select {
+    padding: 8px;
+    border-radius: 5px;
+    background: #1E1E2E;
+    color: white;
+    border: none;
+}
+
+.currency-conversion button {
+    background: #FFD700;
+    color: #121212;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    border: none;
+}
+
+.currency-conversion button:hover {
+    background: #e6b800;
+}
+
+/* ====== Conversion History Section ====== */
+.conversion-history {
+    background: #1E1E2E;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    margin-top: 30px;
+    color: white;
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.conversion-history h2 {
+    color: #FFD700;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* ====== Conversion Table ====== */
+.conversion-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #2A2A3A;
+    margin-top: 10px;
+}
+
+.conversion-table thead {
+    background: #ff007f;
+    color: white;
+}
+
+.conversion-table th, 
+.conversion-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.conversion-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Styling for empty history message */
+.conversion-history p {
+    font-size: 16px;
+    color: #A9A9A9;
+    margin-top: 15px;
+}

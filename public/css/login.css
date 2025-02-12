@@ -1,0 +1,96 @@
+/* Centering the login/register form */
+.login-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+    background: #121212; /* Dark mode background */
+}
+
+/* Form Container */
+.form-container {
+    background: #1c1c1c; /* Dark grey background */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.1);
+    width: 350px;
+    text-align: center;
+}
+
+/* Form Heading */
+.form-container h1 {
+    color: #ffcc00; /* Gold text */
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Form Groups (Each Input Field) */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    font-size: 1em;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ffcc00; /* Gold border */
+    border-radius: 5px;
+    background: #252525;
+    color: #ffffff;
+    font-size: 1em;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+/* Input Hover & Focus Effect */
+.form-group input:focus {
+    border-color: #e6b800; /* Slightly darker gold */
+}
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffcc00; /* Gold button */
+    color: #121212; /* Dark text */
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Button Hover Effect */
+.btn:hover {
+    background: #e6b800; /* Slightly darker gold */
+}
+
+/* Form Footer */
+.form-footer {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+/* Register Link */
+.form-footer a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Register Link Hover */
+.form-footer a:hover {
+    color: #e6b800;
+}

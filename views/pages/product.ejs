@@ -4,22 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= product.name %></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/product-d.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
 </head>
 <body>
     <header>
         <nav class="navbar">
             <a href="/">Home</a>
-            <% if (user && user.isAdmin) { %>
-                <a href="/admin/dashboard">Admin Dashboard</a>
-            <% } %>
             <% if (user) { %>
-                <a href="/users/profile">Profile</a>
+                <% if (user.isAdmin) { %>
+                    <!-- Admin-specific link -->
+                    <a href="/admin/dashboard">Admin Dashboard</a>
+                <% } %>
+                <a href="/users/profile"><span class="material-symbols-outlined">
+                    account_circle
+                    </span></a>
                 <a href="/users/logout">Logout</a>
                 <a href="/basket">Basket</a>
             <% } else { %>
                 <a href="/users/login">Login</a>
                 <a href="/users/register">Register</a>
+                <a href="/basket">Basket</a>
             <% } %>
         </nav>
     </header>

@@ -82,5 +82,4 @@ app.get('/register', (req, res) => {
     res.redirect('/users/register'); // Redirect /register to /users/register
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+

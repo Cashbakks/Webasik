@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const currencyConversionSchema = new mongoose.Schema({
+    baseCurrency: String,
+    targetCurrency: String,
+    amount: Number,
+    convertedAmount: Number,
+    conversionRate: Number,
+    date: { type: Date, default: Date.now }
+});
+
+
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -16,8 +26,13 @@ const userSchema = new mongoose.Schema({
             }
         ],
         totalPrice: { type: Number, default: 0 }
-    }
-});
+    },
+    conversions: { type: Array, default: [] } // Store user currency conversions
+}, { timestamps: true }); // ✅ Auto-add createdAt & updatedAt timestamps
+
+
+
+
 
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {

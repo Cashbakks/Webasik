@@ -55,13 +55,26 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.session.user._id).populate('basket.items.productId');
-        res.render('pages/basket', { basket: user.basket });
+        // Fetch user and populate basket and conversions
+        const user = await User.findById(req.session.user._id)
+            .populate('basket.items.productId')
+            .lean(); // Use .lean() to return a plain JS object (avoids Mongoose issues)
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        res.render('pages/basket', {
+            user,  // Pass the user object to the template
+            basket: user.basket || { items: [], totalPrice: 0 }  // Ensure basket exists
+        });
+
     } catch (error) {
         console.error('Error fetching basket:', error);
         res.status(500).send('Error processing your request');
     }
 });
+
 
 // Remove an item from the basket
 router.post('/remove', async (req, res) => {
@@ -147,4 +160,67 @@ router.post('/update', async (req, res) => {
     }
 });
 
+
+require('dotenv').config();
+
+
+// Middleware to parse incoming JSON data
+// Fetch basket and pass total price to frontend
+const axios = require('axios');
+const API_KEY = process.env.EXCHANGE_RATE_API_KEY;
+const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair`;
+
+// Currency conversion route
+router.get('/convert-currency', async (req, res) => {
+    const { baseCurrency, targetCurrency, amount } = req.query;
+
+    try {
+        // Fetch conversion data from API
+        const url = `${BASE_URL}/${baseCurrency}/${targetCurrency}/${amount}`;
+        const response = await axios.get(url);
+
+        if (response.data.result !== "success") {
+            throw new Error(response.data["error-type"]);
+        }
+
+        const conversionRate = response.data.conversion_rate;
+        const convertedAmount = response.data.conversion_result;
+
+        // Ensure user is logged in
+        if (!req.session.user) {
+            return res.status(401).json({ success: false, message: "User not logged in" });
+        }
+
+        // Find the user in MongoDB and save conversion
+        const user = await User.findById(req.session.user._id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Save the conversion in MongoDB
+        user.conversions.push({
+            baseCurrency,
+            targetCurrency,
+            amount: parseFloat(amount),
+            convertedAmount,
+            conversionRate,
+            date: new Date()
+        });
+
+        await user.save();
+
+        res.json({
+            success: true,
+            conversionRate,
+            convertedAmount,
+            message: "Conversion saved successfully."
+        });
+
+    } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+        res.status(500).json({ success: false, message: "Failed to retrieve exchange rate." });
+    }
+});
+
 module.exports = router;
+

@@ -60,4 +60,48 @@ document.querySelectorAll('.action-form').forEach(form => {
 
      popup.classList.remove('hidden');
  }
- 
+ function filterProducts() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const genderFilter = document.getElementById('genderFilter').value.toLowerCase();
+    const typeFilter = document.getElementById('typeFilter').value.toLowerCase();
+    const sizeFilter = document.getElementById('sizeFilter').value;
+    const companyFilter = document.getElementById('companyFilter').value.toLowerCase();
+    const minPrice = parseFloat(document.getElementById('minPrice').value);
+    const maxPrice = parseFloat(document.getElementById('maxPrice').value);
+
+    const productsContainer = document.querySelector('.products-container');
+    const products = productsContainer.querySelectorAll('.product-card');
+
+    products.forEach(product => {
+        const name = product.querySelector('h2').innerText.toLowerCase();
+        const type = product.dataset.type.toLowerCase();
+        const sizes = product.dataset.size.split(',').map(size => size.trim());
+        const company = product.dataset.company.toLowerCase();
+        const category = product.dataset.category.toLowerCase(); // Fetch category (gender)
+        const price = parseFloat(product.dataset.price);
+
+        // Check if product meets all criteria
+        const matchesSearch = name.includes(searchInput);
+        const matchesGender = !genderFilter || category === genderFilter;
+        const matchesType = !typeFilter || type === typeFilter;
+        const matchesSize = !sizeFilter || sizes.includes(sizeFilter);
+        const matchesBrand = !companyFilter || company === companyFilter;
+        const matchesPrice = (!isNaN(minPrice) && !isNaN(maxPrice)) ? (price >= minPrice && price <= maxPrice) : true;
+
+        if (matchesSearch && matchesGender && matchesType && matchesSize && matchesBrand && matchesPrice) {
+            product.style.display = '';
+        } else {
+            product.style.display = 'none';
+        }
+    });
+}
+
+// Add event listeners to apply filters automatically on change or key up
+document.getElementById('searchInput').addEventListener('keyup', filterProducts);
+document.getElementById('genderFilter').addEventListener('change', filterProducts);
+document.getElementById('typeFilter').addEventListener('change', filterProducts);
+document.getElementById('sizeFilter').addEventListener('change', filterProducts);
+document.getElementById('companyFilter').addEventListener('change', filterProducts);
+document.getElementById('minPrice').addEventListener('keyup', filterProducts);
+document.getElementById('maxPrice').addEventListener('keyup', filterProducts);
+document.getElementById('filterButton').addEventListener('click', filterProducts);

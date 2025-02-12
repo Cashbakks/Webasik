@@ -1,0 +1,370 @@
+/* ======= Global Styles ======= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212; /* Dark theme */
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+/* ======= Navbar ======= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #1E1E2E;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+.navbar a {
+    color: #FFD700; /* Gold color */
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 15px;
+    transition: 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #FFA500;
+}
+
+/* ======= Admin Panel Layout ======= */
+#admin-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #1E1E2E;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* ======= Section Titles ======= */
+h1, h2 {
+    text-align: center;
+    color: #FFD700;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* ======= Tables ======= */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #2A2A3A;
+    border-radius: 10px;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+}
+
+.admin-table thead {
+    background: #FFD700;
+    color: black;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #555;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ======= Form Styling ======= */
+.action-form {
+    background: #2A2A3A;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    display: inline;
+}
+/* ======= Add Product Form Styling ======= */
+.add-product-form {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #1E1E2E;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Form Row: Two inputs per row */
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #2A2A3A;
+    color: white;
+    font-size: 16px;
+}
+
+/* Large Textarea */
+textarea {
+    min-height: 80px;
+    resize: none;
+}
+
+/* Placeholder Styling */
+input::placeholder, textarea::placeholder, select {
+    color: #A9A9A9;
+    font-size: 14px;
+}
+
+/* Focus Effects */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border: 2px solid #FFD700;
+}
+
+/* Add Product Button */
+.btn-add {
+    width: 100%;
+    padding: 12px;
+    background: #28A745;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn-add:hover {
+    background: #218838;
+}
+
+.add-product-form input,
+.add-product-form select,
+.add-product-form textarea {
+    width: 40%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    background: #3A3A4E;
+    color: white;
+    font-size: 16px;
+}
+
+.add-product-form input:focus,
+.add-product-form select:focus,
+.add-product-form textarea:focus {
+    outline: none;
+    border: 2px solid #FFD700;
+}
+
+/* ======= Buttons ======= */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+    background: #28A745;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #218838;
+}
+
+.btn-warning {
+    background: #FFC107;
+    color: black;
+}
+
+.btn-warning:hover {
+    background: #E0A800;
+}
+
+.btn-danger {
+    background: #FF4757;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #E84118;
+}
+
+.btn-edit {
+    background: #17A2B8;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #138496;
+}
+
+/* ======= Footer ======= */
+#admin-footer {
+    text-align: center;
+    padding: 15px;
+    background: #1E1E2E;
+    color: white;
+    margin-top: 30px;
+}
+
+
+
+
+/* ====== Add User Form Styling ====== */
+/* ====== Improved Add User Form Styling ====== */
+.add-user-container {
+    background: #1E1E2E;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+    color: white;
+    text-align: center;
+    width: 50%;
+    max-width: 500px;
+    margin: 0 auto;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.add-user-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.add-user-container h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.add-user-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Input & Select Fields */
+.add-user-container input,
+.add-user-container select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    background: #2A2A3A;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s ease-in-out;
+}
+
+/* Focus Effect */
+.add-user-container input:focus,
+.add-user-container select:focus {
+    border: 2px solid #FFD700;
+    background: #2E2E3E;
+}
+
+/* Submit Button */
+.add-user-container button {
+    background: linear-gradient(135deg, #ff007f, #ff4d4d);
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 100%;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* Hover & Active Effects */
+.add-user-container button:hover {
+    background: linear-gradient(135deg, #d6006b, #d63535);
+    transform: scale(1.05);
+}
+
+.add-user-container button:active {
+    transform: scale(0.98);
+}
+
+.analytics-container {
+    max-width: 900px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.analytics-section {
+    background: #1E1E2E;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+}
+
+.analytics-section h2 {
+    color: #FFD700;
+    margin-bottom: 10px;
+}
+
+.analytics-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #2A2A3A;
+    color: white;
+    text-align: center;
+}
+
+.analytics-section table th,
+.analytics-section table td {
+    padding: 10px;
+    border-bottom: 1px solid #FFD700;
+}
+
+.analytics-section table th {
+    background: #ff007f;
+    color: white;
+}
+
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 400px !important;
+}
+.analytics-container {
+    max-width: 900px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.analytics-section h2 {
+    color: #FFD700;
+    margin-bottom: 10px;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 400px !important;
+}
