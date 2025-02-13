@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Shoe Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/users/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="generated-shoes-container">
+        <h1>👟 AI Shoe Generator</h1>
+    
+        <!-- Shoe Generation Form -->
+        <section class="generate-shoe-section">
+            <h2>🛠️ Generate Your Own Shoe</h2>
+            <form id="generate-shoe-form" action="/generate/shoe" method="post">
+                <label for="shoeIdea">Describe your shoe idea:</label>
+                <textarea id="shoeIdea" name="description" placeholder="E.g. A futuristic sneaker with neon lights and a sleek design" required></textarea>
+                <button type="submit" class="btn btn-primary">Generate Shoe</button>
+            </form>
+        </section>
+    
+        <!-- Display Generated Shoes -->
+        <section class="generated-shoes-gallery">
+            <h2>📸 My AI-Generated Shoes</h2>
+            <% if (shoes.length > 0) { %>
+                <div class="shoe-gallery">
+                    <% shoes.forEach(shoe => { %>
+                        <div class="shoe-card">
+                            <!-- Ensure proper image format -->
+                            <img src="data:image/png;base64,<%= shoe.imageUrl %>" alt="Generated Shoe">
+
+                            <p><strong>Description:</strong> <%= shoe.description %></p>
+                            <p><strong>Generated on:</strong> <%= new Date(shoe.createdAt).toLocaleString() %></p>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>No generated shoes yet! Create one now above. 👆</p>
+            <% } %>
+        </section>
+        
+    </main>
+    
+    <footer>
+        <p>© 2025 AI Shoe Generator. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("generateShoeBtn").addEventListener("click", async function() {
+            const description = document.getElementById("shoeIdea").value;
+            if (!description) return alert("Please enter a shoe idea!");
+
+            const response = await fetch("/generate/shoe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ description })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("✅ Shoe generated successfully!");
+                location.reload();
+            } else {
+                alert("❌ Error generating shoe: " + data.message);
+            }
+        });
+    </script>
+
+    <style>
+        .generated-shoes-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .generate-shoe-section {
+            background: #1E1E2E;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            color: white;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .generate-shoe-section h2 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .generate-shoe-section textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            background: #2A2A3A;
+            color: white;
+            resize: none;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .generate-shoe-section button {
+            background: #ff007f;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .generate-shoe-section button:hover {
+            background: #d6006b;
+        }
+
+        .generated-shoes-gallery {
+            margin-top: 40px;
+        }
+
+        .shoe-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .shoe-card {
+            background: #1E1E2E;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 280px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .shoe-card:hover {
+            transform: scale(1.05);
+        }
+
+        .shoe-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .shoe-card p {
+            font-size: 14px;
+            color: #A9A9A9;
+        }
+    </style>
+</body>
+</html>

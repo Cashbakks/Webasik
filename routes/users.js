@@ -12,20 +12,28 @@ router.post('/register', async (req, res) => {
     try {
         const { name, surname, email, username, password, adminCode } = req.body;
 
-        console.log('Registering user:', username);
+        // Ensure all fields are filled
+        if (!name || !surname || !email || !username || !password) {
+            return res.render('pages/register', { errorMessage: 'All fields are required!' });
+        }
+
+        // Check if username or email already exists
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            return res.render('pages/register', { errorMessage: 'Username or email already exists!' });
+        }
 
         const isAdmin = adminCode === process.env.ADMIN_CODE;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save the new user
-        const newUser = new User({ name, surname, email, username, password:  password, isAdmin });
+        const newUser = new User({ name, surname, email, username, password: hashedPassword, isAdmin });
         await newUser.save();
 
-        console.log('Saved User:', newUser);
         res.redirect('/users/login');
     } catch (error) {
         console.error('Error during registration:', error);
-        res.status(500).send('An error occurred during registration.');
+        res.render('pages/register', { errorMessage: 'An error occurred during registration.' });
     }
 });
 
