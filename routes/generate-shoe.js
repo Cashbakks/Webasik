@@ -20,7 +20,7 @@ router.post("/shoe", isAuthenticated, async (req, res) => {
 
         // Create a FormData object
         const formData = new FormData();
-        formData.append("prompt", `A futuristic sneaker, anime-style, colorful, stylish. ${description}`);
+        formData.append("prompt", `sneaker.colorful ${description}`);
         formData.append("model", "stable-diffusion-xl-1024-v1-0");
         formData.append("width", "1024");
         formData.append("height", "1024");
