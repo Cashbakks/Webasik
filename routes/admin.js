@@ -19,6 +19,7 @@ router.get('/dashboard', isAuthenticated, isAdmin, async (req, res) => {
 router.post('/add-product', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { name, price, description, imageUrl, type, sizes, model, company, color, category } = req.body;
+        console.log("Authenticated User:", req.session.user);
 
         const newProduct = new Product({
             name,
@@ -291,5 +292,13 @@ router.get('/analytics', async (req, res) => {
     }
 });
 
-
+router.get("/products", async (req, res) => {
+    try {
+        const products = await Product.find().populate('createdBy', 'username'); // Populate with the user's username
+        res.render("pages/products", { products });
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).send("Error fetching products.");
+    }
+});
 module.exports = router;

@@ -7,6 +7,39 @@
     <link rel="stylesheet" href="/css/admin.css">
     <script src="/js/script.js" defer></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+    <style>
+        /* Table styles for user and product tables */
+        .admin-table-container {
+            max-height: 500px; /* Limit the height of the table */
+            overflow-y: auto; /* Add vertical scrolling */
+            margin-bottom: 20px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .admin-table th {
+            background-color: #f4f4f4;
+        }
+
+        .search-input {
+            width: 300px;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <header id="admin-header">
@@ -25,170 +58,189 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main id="admin-container">
+        <div class="add-user-container">
+            <h3>Add New User</h3>
+            <form action="/admin/add-user" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+        
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" name="surname" required>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+        
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+        
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+        
+                <label for="isAdmin">Admin Privileges:</label>
+                <select id="isAdmin" name="isAdmin">
+                    <option value="false">User</option>
+                    <option value="true">Admin</option>
+                </select>
+        
+                <button type="submit" class="btn btn-primary">Add User</button>
+            </form>
+        </div>
         <!-- User Management Section -->
         <section id="user-management">
             <h2 id="user-management-title">User Management</h2>
-            <div id="notification" class="notification hidden">
-                <p id="notification-message"></p>
-            </div>
-
-<!-- Add User Form -->
-<div class="add-user-container">
-    <h3>Add New User</h3>
-    <form action="/admin/add-user" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="surname">Surname:</label>
-        <input type="text" id="surname" name="surname" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="isAdmin">Admin Privileges:</label>
-        <select id="isAdmin" name="isAdmin">
-            <option value="false">User</option>
-            <option value="true">Admin</option>
-        </select>
-
-        <button type="submit" class="btn btn-primary">Add User</button>
-    </form>
-</div>
-
-<!-- User List -->
-<section id="user-management">
-    <h2 id="user-management-title">User Management</h2>
-    <table id="user-table" class="admin-table">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Admin Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(user => { %>
-                <tr>
-                    <td><%= user.username %></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.isAdmin ? 'Admin' : 'User' %></td>
-                    <td><%= new Date(user.createdAt).toLocaleString() %></td>
-                    <td><%= new Date(user.updatedAt).toLocaleString() %></td>
-                    <td>
-                        <a href="/admin/edit-user/<%= user._id %>" class="btn btn-edit">Edit</a>
-                        <form action="/admin/delete-user/<%= user._id %>" method="post" class="inline-form">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
-</section>
-
             
-        </section>
-    </main>
-    
-        <!-- Product Management Section -->
-        <header>
-            <h1>Product Management</h1>
-        </header>
-        <main>
-            <!-- Product Management Section -->
-            <!-- Add Product Form -->
-            <form id="add-product-form" action="/admin/add-product" method="post" class="add-product-form">
-                <div class="form-row">
-                    <input id="product-name" type="text" name="name" placeholder="Product Name" required>
-                    <input id="product-price" type="number" name="price" placeholder="Price ($)" required>
-                </div>
-                
-                <div class="form-row">
-                    <textarea id="product-description" name="description" placeholder="Description"></textarea>
-                </div>
-                
-                <div class="form-row">
-                    <input id="product-image" type="text" name="imageUrl" placeholder="Image URL">
-                </div>
-                
-                <div class="form-row">
-                    <select id="product-type" name="type" required>
-                        <option value="">Select Type</option>
-                        <option value="Sneakers">Sneakers</option>
-                        <option value="Formal">Formal</option>
-                        <option value="Boots">Boots</option>
-                        <option value="Sandals">Sandals</option>
-                    </select>
-                    
-                    <input id="product-sizes" type="text" name="sizes" placeholder="Sizes (comma-separated, e.g., 7,8,9)">
-                </div>
-                
-                <div class="form-row">
-                    <input id="product-model" type="text" name="model" placeholder="Model">
-                    <input id="product-color" type="text" name="color" placeholder="Color">
-                </div>
-                
-                <div class="form-row">
-                    <select id="product-category" name="category">
-                        <option value="Men">Men</option>
-                        <option value="Women">Women</option>
-                        <option value="Unisex">Unisex</option>
-                    </select>
-                </div>
-            
-                <button type="submit" class="btn btn-add">Add Product</button>
-            </form>
-            
+            <!-- Search for Users -->
+            <input type="text" id="userSearch" class="search-input" placeholder="Search users by name" onkeyup="filterTable('user')">
 
-        
-            <table id="product-table" class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Created By</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% products.forEach(product => { %>
+            <div class="admin-table-container">
+                <table id="user-table" class="admin-table">
+                    <thead>
                         <tr>
-                            <td><%= product.name %></td>
-                            <td>$<%= product.price.toFixed(2) %></td>
-                            <td><%= product.createdBy ? product.createdBy.username : 'Unknown' %></td>
-                            <td><%= new Date(product.createdAt).toLocaleString() %></td>
-                            <td><%= new Date(product.updatedAt).toLocaleString() %></td>
-                            <td>
-                                <a href="/admin/edit-product/<%= product._id %>" class="btn btn-edit">Edit</a>
-                                <form action="/admin/delete-product/<%= product._id %>" method="post" class="action-form">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </td>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Admin Status</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th>
                         </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-            
-            </section>
-        </main>
-        
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user.username %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.isAdmin ? 'Admin' : 'User' %></td>
+                                <td><%= new Date(user.createdAt).toLocaleString() %></td>
+                                <td><%= new Date(user.updatedAt).toLocaleString() %></td>
+                                <td>
+                                    <a href="/admin/edit-user/<%= user._id %>" class="btn btn-edit">Edit</a>
+                                    <form action="/admin/delete-user/<%= user._id %>" method="post" class="inline-form">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+<br>
+<br>
+        <!-- Product Management Section -->
+        <section id="product-management">
+            <h2>Product</h2>
+            <header>
+                <h1>Product Management</h1>
+            </header>
+            <main>
+                <!-- Product Management Section -->
+                <!-- Add Product Form -->
+                <form id="add-product-form" action="/admin/add-product" method="post" class="add-product-form">
+                    <div class="form-row">
+                        <input id="product-name" type="text" name="name" placeholder="Product Name" required>
+                        <input id="product-price" type="number" name="price" placeholder="Price ($)" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <textarea id="product-description" name="description" placeholder="Description"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <input id="product-image" type="text" name="imageUrl" placeholder="Image URL">
+                    </div>
+                    
+                    <div class="form-row">
+                        <select id="product-type" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="Sneakers">Sneakers</option>
+                            <option value="Formal">Formal</option>
+                            <option value="Boots">Boots</option>
+                            <option value="Sandals">Sandals</option>
+                        </select>
+                        
+                        <input id="product-sizes" type="text" name="sizes" placeholder="Sizes (comma-separated, e.g., 7,8,9)">
+                    </div>
+                    
+                    <div class="form-row">
+                        <input id="product-model" type="text" name="model" placeholder="Model">
+                        <input id="product-company" type="text" name="company" placeholder="company">
+                        <input id="product-color" type="text" name="color" placeholder="Color">
+                    </div>
+                    
+                    <div class="form-row">
+                        <select id="product-category" name="category">
+                            <option value="Men">Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Unisex">Unisex</option>
+                        </select>
+                    </div>
+                
+                    <button type="submit" class="btn btn-add">Add Product</button>
+                </form>
+                
+    
+                <input type="text" id="productSearch" class="search-input" placeholder="Search products by name" onkeyup="filterTable('product')">
+
+                <div class="admin-table-container">
+                    <table id="product-table" class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Created By</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% products.forEach(product => { %>
+                                <tr>
+                                    <td><%= product.name %></td>
+                                    <td>$<%= product.price.toFixed(2) %></td>
+                                    <td><%= product.createdBy ? product.createdBy.username : 'Unknown' %></td> <!-- Display CreatedBy username -->
+                                    <td><%= new Date(product.createdAt).toLocaleString() %></td>
+                                    <td><%= new Date(product.updatedAt).toLocaleString() %></td>
+                                    <td>
+                                        <a href="/admin/edit-product/<%= product._id %>" class="btn btn-edit">Edit</a>
+                                        <form action="/admin/delete-product/<%= product._id %>" method="post" class="inline-form">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
 
     <!-- Footer Section -->
     <footer id="admin-footer">
         <p>Admin Panel © 2025</p>
     </footer>
+
+    <script>
+        // Function to filter tables
+        function filterTable(type) {
+            const input = type === 'user' ? document.getElementById('userSearch') : document.getElementById('productSearch');
+            const filter = input.value.toLowerCase();
+            const table = type === 'user' ? document.getElementById('user-table') : document.getElementById('product-table');
+            const tr = table.getElementsByTagName('tr');
+
+            // Loop through all rows
+            for (let i = 0; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td')[0]; // Filter by the first column (name)
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
 </body>
 </html>
