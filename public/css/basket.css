@@ -300,3 +300,63 @@ footer {
     color: #A9A9A9;
     margin-top: 15px;
 }
+#google_translate_element {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: none;
+}
+
+/* ======= Translate Button Styling ======= */
+#translateButton {
+    background-color: #28A745; /* Green color to match the button theme */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+    margin: 20px 0;
+}
+
+/* Hover Effect for Translate Button */
+#translateButton:hover {
+    background-color: #218838; /* Darker green when hovered */
+}
+
+/* Positioning for Basket Page */
+.basket-container {
+    position: relative;
+}
+
+/* ======= Make the Translate Widget More Visible ======= */
+#google_translate_element select {
+    background-color: #1E1E2E;
+    color: #FFD700; /* Gold color for dropdown text */
+    border: 1px solid #FFD700;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#google_translate_element select:hover {
+    background-color: #FFD700;
+    color: #1E1E2E;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 768px) {
+    #google_translate_element {
+        top: 10px;
+        right: 10px;
+    }
+
+    #translateButton {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}

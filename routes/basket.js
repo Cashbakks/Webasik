@@ -38,7 +38,9 @@ router.post('/add', async (req, res) => {
             0
         );
 
+        // Recalculate discounted total price
         user.basket = basket;
+        user.calculateDiscountedPrice(); // Recalculate the discounted total price
         await user.save();
 
         res.redirect('/basket');
@@ -84,18 +86,49 @@ router.post('/remove', async (req, res) => {
 
     try {
         const { productId } = req.body;
+
+        // Check if productId exists in request body
+        if (!productId) {
+            return res.status(400).send('Product ID is required');
+        }
+
+        // Find the user and update their basket
         const user = await User.findById(req.session.user._id);
 
-        user.basket.items = user.basket.items.filter(item => item.productId.toString() !== productId);
+        // If user is not found, return error
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Check if the basket exists
+        const basket = user.basket || { items: [], totalPrice: 0 };
+
+        // Filter out the item with the provided productId
+        const updatedItems = basket.items.filter(item => item.productId.toString() !== productId);
 
         // Recalculate total price
-        user.basket.totalPrice = user.basket.items.reduce(
-            (sum, item) => sum + item.productId.price * item.quantity,
+        let updatedTotalPrice = updatedItems.reduce(
+            (sum, item) => {
+                // Ensure both item.productId.price and item.quantity are numbers
+                if (!item.productId.price || !item.quantity || isNaN(item.productId.price) || isNaN(item.quantity)) {
+                    return sum;  // Skip invalid items
+                }
+                return sum + item.productId.price * item.quantity;
+            },
             0
         );
 
+        // If no items remain, set totalPrice to 0
+        updatedTotalPrice = isNaN(updatedTotalPrice) ? 0 : updatedTotalPrice;
+
+        // Update the basket in the user object
+        user.basket.items = updatedItems;
+        user.basket.totalPrice = updatedTotalPrice;
+
+        // Save the updated user object
         await user.save();
 
+        // Redirect to basket page
         res.redirect('/basket');
     } catch (error) {
         console.error('Error removing item from basket:', error);
@@ -103,24 +136,6 @@ router.post('/remove', async (req, res) => {
     }
 });
 
-// Clear the basket
-router.post('/clear', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).send('You must be logged in to clear the basket');
-    }
-
-    try {
-        const user = await User.findById(req.session.user._id);
-
-        user.basket = { items: [], totalPrice: 0 };
-        await user.save();
-
-        res.redirect('/basket');
-    } catch (error) {
-        console.error('Error clearing basket:', error);
-        res.status(500).send('Error processing your request');
-    }
-});
 // Update item quantity in the basket
 router.post('/update', async (req, res) => {
     if (!req.session.user) {
@@ -221,6 +236,61 @@ router.get('/convert-currency', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to retrieve exchange rate." });
     }
 });
+router.post("/apply-discount", async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const user = await User.findById(userId);
 
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found." });
+        }
+
+        if (user.discountPercentage > 0) {
+            // Apply the discount
+            user.calculateDiscountedPrice();
+            await user.save();
+
+            return res.json({
+                success: true,
+                message: "Discount applied successfully!",
+                discountedTotalPrice: user.discountedTotalPrice // Send discounted total price
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: "No discount available."
+            });
+        }
+
+    } catch (error) {
+        console.error("Error applying discount:", error);
+        res.status(500).json({ success: false, message: "Failed to apply discount." });
+    }
+});
+router.post('/clear', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send('You must be logged in to clear the basket');
+    }
+
+    try {
+        const user = await User.findById(req.session.user._id);
+
+        // If user is not found, return error
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Clear the basket items and reset totalPrice to 0
+        user.basket = { items: [], totalPrice: 0 };
+
+        // Save the updated user object
+        await user.save();
+
+        // Redirect to basket page
+        res.redirect('/basket');
+    } catch (error) {
+        console.error('Error clearing basket:', error);
+        res.status(500).send('Error processing your request');
+    }
+});
 module.exports = router;
-

@@ -7,8 +7,11 @@
     <script src="/js/map.js"></script>
     <link rel="stylesheet" href="/css/basket.css">
     <script src="/js/currency.js"></script>
+    <script rel="/js/transik.js"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4emWYmzAFTtydMRTYFbA5Jf9laUJUnDc&libraries=places"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle">
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
   <header>
@@ -30,6 +33,10 @@
             <a href="/basket">Basket</a>
         <% } %>
     </nav>
+    <button id="translateButton" class="translate-button">Translate Page</button>
+    
+   
+    <div id="google_translate_element"></div>
 </header>
 <main class="basket-container">
     <h1>Your Basket</h1>
@@ -72,6 +79,18 @@
             <form action="/basket/clear" method="post" class="inline-form">
                 <button type="submit" class="btn btn-clear">Clear Basket</button>
             </form>
+            <div class="total-price-container">
+                <p class="total-price">Total Price: $<%= basket.totalPrice.toFixed(2) %></p>
+                <% if (user && user.discountedTotalPrice > 0) { %>
+                    <p class="discount-text">Discount: <%= user.discountPercentage %>%</p>
+                    <p class="discounted-price">Discounted Price: $<%= user.discountedTotalPrice.toFixed(2) %></p>
+                    <button id="applyDiscount" class="btn btn-discount">Apply Discount</button>
+
+                <% } else { %>
+                    <button id="applyDiscount" class="btn btn-discount">Apply Discount</button>
+                <% } %>
+            </div>
+
             <!-- Currency Conversion Form -->
             <div class="currency-conversion">
                 <label for="conversionCurrency">Convert Total to:</label>
@@ -84,11 +103,12 @@
                 <button type="button" id="convertCurrency">Convert</button>
                 
                 <!-- Display converted total -->
-                <p id="convertedTotal"><strong>Converted Total:</strong> $<%= basket.totalPrice.toFixed(2) %></p>
+                <p id="convertedTotal"><strong>Converted Total:</strong> $<%= user.discountedTotalPrice.toFixed(2) %></p>
             
                 <!-- Hidden fields for converted values -->
                 <input type="hidden" id="hiddenConvertedAmount" name="convertedAmount">
                 <input type="hidden" id="hiddenConvertedCurrency" name="convertedCurrency">
+                
             </div>
             
 
@@ -97,6 +117,48 @@
         <p class="empty-basket">Your basket is empty!</p>
     <% } %>
 </main>
+<script>
+    document.getElementById("applyDiscount").addEventListener("click", async function() {
+        const response = await fetch("/basket/apply-discount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            // Update the basket with the discounted price
+            alert("✅ Discount applied successfully!");
+            document.querySelector('.total-price').textContent = `Total Price: $${data.discountedTotalPrice.toFixed(2)}`;
+            document.querySelector('.discount-text').textContent = `Discount: ${data.discountPercentage}%`;
+            document.querySelector('.discounted-price').textContent = `Discounted Price: $${data.discountedTotalPrice.toFixed(2)}`;
+            setTimeout(() => {
+                location.reload(); // Reload the page after delay
+            }, 300);
+        } else {
+            alert("❌ Error applying discount: " + data.message);
+        }
+    });
+</script>
+<script>document.getElementById('translateButton').addEventListener('click', function() {
+    const translateElement = document.getElementById("google_translate_element");
+    if (translateElement.style.display === "none") {
+        translateElement.style.display = "block";  // Show the translate widget
+        googleTranslateElementInit();  // Initialize Google Translate
+    } else {
+        translateElement.style.display = "none";  // Hide the translate widget
+    }
+});
+
+// Initialize Google Translate Element
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'en',  // Default language of the page
+        includedLanguages: 'en,es,fr,de,it,pt,ru', // Languages you want to support
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+}</script>
 <!-- Currency Conversion Form -->
 <div class="conversion-history">
     <h2>Conversion History</h2>
@@ -135,7 +197,7 @@
 
     </main><script>
         document.getElementById('convertCurrency').addEventListener('click', function() {
-            const totalAmount = parseFloat('<%= basket.totalPrice.toFixed(2) %>'); 
+            const totalAmount = parseFloat('<%= user.discountedTotalPrice.toFixed(2) %>'); 
             const currency = document.getElementById('conversionCurrency').value;
         
             fetch(`/basket/convert-currency?baseCurrency=USD&targetCurrency=${currency}&amount=${totalAmount}`, {
@@ -153,6 +215,9 @@
         
                     // Show a success message
                     alert("Conversion successful and saved to database.");
+                    setTimeout(() => {
+                location.reload(); // Reload the page after delay
+            }, 300);
                 } else {
                     document.getElementById('convertedTotal').textContent = 'Conversion error: ' + data.message;
                 }

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take the Quiz</title>
+    <style>
+        .timer {
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .quiz-question {
+            margin-bottom: 15px;
+        }
+    </style>
+      <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/questions">Quiz Questions</a>
+        <a href="/users/logout">Logout</a>
+    </nav>
+</header>
+
+<h1>Take the Quiz</h1>
+
+<div class="timer">
+    <p>Time Remaining: <span id="timeRemaining">60</span> seconds</p>
+</div>
+
+<!-- Show result message if available -->
+<% if (resultMessage) { %>
+    <div class="result-message">
+        <p><%= resultMessage %></p>
+        <p>You received a <%= discount %>% discount!</p>
+        <% if (attemptsLeft > 0) { %>
+            <button id="retryQuizBtn" onclick="retryQuiz()">Retry Quiz</button>
+        <% } else { %>
+            <p>You have reached the maximum number of attempts.</p>
+        <% } %>
+    </div>
+<% } else { %>
+    <!-- Show quiz questions if resultMessage is not present -->
+    <form id="quizForm" action="/quiz/submit/<%= attemptId %>" method="POST">
+        <div id="quizQuestions">
+            <% questions.forEach((question, index) => { %>
+                <div class="quiz-question">
+                    <label><%= question.question %></label>
+                    <% question.answers.forEach((answer, i) => { %>
+                        <input type="radio" name="question<%= index %>" value="<%= answer.text %>" id="answer<%= index %>_<%= i %>" class="answer-radio">
+                        <label for="answer<%= index %>_<%= i %>"><%= answer.text %></label><br>
+                    <% }) %>
+                </div>
+            <% }) %>
+        </div>
+    
+        <button type="submit" id="submitBtn">Submit Quiz</button> <!-- Ensure this is inside the form -->
+    </form>
+<% } %>
+
+<script>
+    let timeRemaining = 60; // Starting time in seconds
+    const timeDisplay = document.getElementById("timeRemaining");
+    const submitBtn = document.getElementById("submitBtn");
+    const radioButtons = document.querySelectorAll('.answer-radio');
+    let timer;
+    let timerStarted = false;
+
+    // Start the countdown timer
+    function startTimer() {
+        if (!timerStarted) {
+            timerStarted = true;
+            timer = setInterval(() => {
+                timeRemaining--;
+                timeDisplay.innerText = timeRemaining;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    alert("Time is up! Your quiz will be submitted automatically.");
+                    autoSubmitQuiz();
+                }
+            }, 1000);
+        }
+    }
+
+    // Automatically submit the quiz when time runs out
+    function autoSubmitQuiz() {
+        const answers = [];
+        const questionElements = document.querySelectorAll('.quiz-question');
+
+        questionElements.forEach((question, index) => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            answers.push(selectedAnswer ? selectedAnswer.value : '');
+        });
+
+        const attemptId = "<%= attemptId %>";  // Ensure this is the correct attempt ID
+
+        fetch(`/quiz/submit/${attemptId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answers })
+        }).then(response => response.json())
+          .then(result => {
+            if (result.success) {
+                alert(`Your score is: ${result.score}/5. You got a ${result.discount}% discount!`);
+                location.reload(); // Reload the page to show the updated result
+            } else {
+                alert("Failed to submit quiz. Please try again.");
+            }
+        }).catch(error => console.error("Error submitting quiz:", error));
+    }
+
+    // Allow the user to retry the quiz manually
+    function retryQuiz() {
+        window.location.href = '/quiz/start';
+    }
+
+    // Start the timer when the first radio button is clicked
+    radioButtons.forEach((button) => {
+        button.addEventListener('click', startTimer);
+    });
+
+    // Manual form submission
+    document.getElementById("quizForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevents the default form submission
+
+        // Stop the timer when the user submits manually
+        clearInterval(timer);
+
+        const answers = [];
+        const questionElements = document.querySelectorAll('.quiz-question');
+        
+        questionElements.forEach((question, index) => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            answers.push(selectedAnswer ? selectedAnswer.value : '');
+        });
+
+        const attemptId = "<%= attemptId %>";  // Ensure this is the correct attempt ID
+
+        fetch(`/quiz/submit/${attemptId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answers })
+        }).then(response => response.json())
+          .then(result => {
+            if (result.success) {
+                alert(`Your score is: ${result.score}/5. You got a ${result.discount}% discount!`);
+                location.reload(); // Reload the page to show the updated result
+            } else {
+                alert("Failed to submit quiz. Please try again.");
+            }
+        }).catch(error => console.error("Error submitting quiz:", error));
+        
+        // Clear radio button selections after submission
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.checked = false;
+        });
+    });
+</script>
+
+</body>
+</html>

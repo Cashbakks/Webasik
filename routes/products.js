@@ -5,13 +5,15 @@ const { isAuthenticated, isAdmin } = require('../middlewares/auth');
 // Add product (accessible only by admins)
 router.post("/add-product", isAuthenticated, async (req, res) => {
     try {
-        const { name, price, description, imageUrl, type, sizes, model, company, color, category } = req.body;
+        const { name, price, description, imageUrl,imageUrl1,imageUrl2, type, sizes, model, company, color, category } = req.body;
 
         const newProduct = new Product({
             name,
             price,
             description,
             imageUrl,
+            imageUrl1,
+            imageUrl2,
             type,
             sizes: sizes.split(',').map(size => Number(size.trim())), 
             model,

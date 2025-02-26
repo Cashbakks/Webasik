@@ -6,6 +6,8 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/admin.css">
     <script src="/js/script.js" defer></script>
+    <script rel="/js/transik.js"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle" />
     <style>
         /* Table styles for user and product tables */
@@ -56,6 +58,11 @@
                 <a href="/users/register">Register</a>
             <% } %>
         </nav>
+         <!-- Translate Page Button -->
+    <button id="translateButton" class="translate-button">Translate Page</button>
+    
+    <!-- Google Translate widget will be shown here -->
+    <div id="google_translate_element"></div>
     </header>
 
     <main id="admin-container">
@@ -213,6 +220,117 @@
                         </tbody>
                     </table>
                 </div>
+                <br>
+                <br>
+                <section id="quiz-management">
+                    <h2>Quiz Management</h2>
+                    
+                    <!-- Table for managing quiz questions -->
+                    <div class="admin-table-container">
+                        <table id="quiz-table">
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Answer 1</th>
+                                    <th>Answer 2</th>
+                                    <th>Answer 3</th>
+                                    <th>Answer 4</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (quizQuestions && quizQuestions.length > 0) { %>
+                                    <% quizQuestions.forEach(question => { %>
+                                        <tr>
+                                            <td><%= question.question %></td>
+                                            <td><%= question.answers[0].text %></td>
+                                            <td><%= question.answers[1].text %></td>
+                                            <td><%= question.answers[2].text %></td>
+                                            <td><%= question.answers[3].text %></td>
+                                            <td>
+                                                <a href="/admin/edit-question/<%= question._id %>" class="btn btn-edit">Edit</a>
+                                                <form action="/admin/delete-question/<%= question._id %>" method="post">
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                                
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6">No quiz questions available.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Form to add new quiz question -->
+                    <h3>Add New Question</h3>
+                    <!-- Form to add a new quiz question -->
+                    <form action="/admin/add-question" method="post">
+                        <label for="question">Question:</label>
+                        <input type="text" name="question" id="question" required>
+                
+                        <label for="answers">Answers:</label>
+                        <div class="answer-container">
+                            <input type="text" name="answers[0]" required placeholder="Answer 1">
+                            <input type="text" name="answers[1]" required placeholder="Answer 2">
+                            <input type="text" name="answers[2]" required placeholder="Answer 3">
+                            <input type="text" name="answers[3]" required placeholder="Answer 4">
+                        </div>
+                
+                        <label for="correctAnswerIndex">Correct Answer Index (0-3):</label>
+                        <input type="number" name="correctAnswerIndex" id="correctAnswerIndex" required min="0" max="3">
+                
+                        <button type="submit" class="btn btn-primary">Add Question</button>
+                    </form>
+                </div>
+
+                </section>
+                
+            <br>
+            <br>
+                   <!-- User Attempt Management -->
+                   <section id="attempt-management">
+                    <h2>User Attempt Management</h2>
+                
+                    <div class="admin-table-container">
+                        <table class="admin-table" id="attempt-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Attempt Date</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% attempts.forEach(attempt => { %>
+                                    <tr>
+                                        <td><%= attempt.userId.username %></td>
+                                        <td><%= new Date(attempt.attemptDate).toLocaleString() %></td>
+                                        <td><%= attempt.score %> / 5</td>
+                                        <td>
+                                            <a href="/admin/view-attempt/<%= attempt._id %>" class="btn btn-view">View</a>
+                                            <form action="/admin/delete-attempt/<%= attempt._id %>" method="post" class="inline-form">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                            
+                                            
+                                            
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+
+            
+                </main>
+            
 
     <!-- Footer Section -->
     <footer id="admin-footer">
@@ -220,6 +338,26 @@
     </footer>
 
     <script>
+        // Function to filter quiz and attempts table
+        function filterTable(type) {
+            const input = type === 'quiz' ? document.getElementById('quizSearch') : document.getElementById('attemptSearch');
+            const filter = input.value.toLowerCase();
+            const table = type === 'quiz' ? document.getElementById('quiz-table') : document.getElementById('attempt-table');
+            const tr = table.getElementsByTagName('tr');
+
+            // Loop through all rows
+            for (let i = 0; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td')[0]; // Filter by the first column (name)
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
         // Function to filter tables
         function filterTable(type) {
             const input = type === 'user' ? document.getElementById('userSearch') : document.getElementById('productSearch');
@@ -240,6 +378,24 @@
                 }
             }
         }
+        document.getElementById('translateButton').addEventListener('click', function() {
+    const translateElement = document.getElementById("google_translate_element");
+    if (!translateElement) {
+        const div = document.createElement('div');
+        div.id = "google_translate_element";
+        document.body.appendChild(div);
+        googleTranslateElementInit();  // Initialize translation when clicked
+    }
+});
+
+// Initialize Google Translate Element
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'en',  // Default language of the page
+        includedLanguages: 'en,es,fr,de,it,pt,ru', // Languages you want to support
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+}
     </script>
 
 </body>

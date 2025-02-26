@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/edit-product.css">
-    
+    <script rel="/js/transik.js"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
     <header>
@@ -25,6 +26,12 @@
 
             <label for="imageUrl">Image URL:</label>
             <input type="text" id="imageUrl" name="imageUrl" value="<%= product.imageUrl %>">
+
+            <label for="imageUrl1">Image URL1:</label>
+            <input type="text" id="imageUrl1" name="imageUrl1" value="<%= product.imageUrl1 %>">
+            
+            <label for="imageUrl2">Image URL2:</label>
+            <input type="text" id="imageUrl2" name="imageUrl2" value="<%= product.imageUrl2 %>">
 
             <label for="type">Type:</label>
             <input type="text" id="type" name="type" value="<%= product.type %>">

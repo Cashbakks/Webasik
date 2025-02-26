@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+    <script rel="/js/transik.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212; /* Dark theme */
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #1E1E2E;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .navbar a:hover {
+            color: #FFA500;
+        }
+
+        /* Admin Panel Layout */
+        #admin-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1E1E2E;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Section Titles */
+        h1, h2 {
+            text-align: center;
+            color: #FFD700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            background: #2A2A3A;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Input and Select Fields */
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: #3A3A4E;
+            color: white;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            border: 2px solid #FFD700;
+            outline: none;
+        }
+
+        /* Button Styling */
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #28A745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/questions">Quiz Questions</a>
+        <a href="/users/logout">Logout</a>
+    </nav>
+</header>
+
+<h1>Edit Question</h1>
+
+<form action="/admin/update-question/<%= question._id %>" method="post">
+    <label for="question">Question:</label>
+    <input type="text" name="question" id="question" value="<%= question.question %>" required>
+
+    <label for="answers">Answers:</label>
+    <div class="answer-container">
+        <input type="text" name="answers[0]" value="<%= question.answers[0].text %>" required>
+        <input type="text" name="answers[1]" value="<%= question.answers[1].text %>" required>
+        <input type="text" name="answers[2]" value="<%= question.answers[2].text %>" required>
+        <input type="text" name="answers[3]" value="<%= question.answers[3].text %>" required>
+    </div>
+
+    <label for="correctAnswerIndex">Correct Answer Index (0-3):</label>
+    <input type="number" name="correctAnswerIndex" id="correctAnswerIndex" value="<%= question.answers.findIndex(a => a.isCorrect) %>" required min="0" max="3">
+
+    <button type="submit" class="btn btn-primary">Update Question</button>
+</form>
+
+<a href="/admin/dashboard" class="back-btn">Back to Questions</a>
+
+</body>
+</html>
