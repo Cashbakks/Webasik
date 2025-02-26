@@ -15,7 +15,8 @@
             margin-bottom: 15px;
         }
     </style>
-      <link rel="stylesheet" href="/css/home.css">
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+      <link rel="stylesheet" href="/css/quiz.css">
 </head>
 <body>
 
@@ -25,6 +26,10 @@
         <a href="/admin/questions">Quiz Questions</a>
         <a href="/users/logout">Logout</a>
     </nav>
+    <button id="translateButton" class="translate-button">Translate Page</button>
+    
+   
+    <div id="google_translate_element"></div>
 </header>
 
 <h1>Take the Quiz</h1>
@@ -165,6 +170,24 @@
             input.checked = false;
         });
     });
+    document.getElementById('translateButton').addEventListener('click', function() {
+        const translateElement = document.getElementById("google_translate_element");
+        if (translateElement.style.display === "none") {
+            translateElement.style.display = "block";  // Show the translate widget
+            googleTranslateElementInit();  // Initialize Google Translate
+        } else {
+            translateElement.style.display = "none";  // Hide the translate widget
+        }
+    });
+
+    // Initialize Google Translate Element
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',  // Default language of the page
+            includedLanguages: 'en,es,fr,de,it,pt,ru', // Languages you want to support
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
 </script>
 
 </body>

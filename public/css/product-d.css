@@ -144,33 +144,25 @@ footer {
     font-size: 14px;
 }
 /* ===== Carousel Styling ===== */
-/* ===== Carousel Styling ===== */
 .carousel-inner {
-    width: 400x;
-    height: 450px;  /* Set fixed height for the carousel */
+    width: 300px;
+    height: auto; /* Limit the height of the carousel */
     overflow: hidden;
     position: relative;
 }
 
-.carousel-item {
-    height: 400px; /* Ensure carousel items have the same fixed height */
-    width: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Fix the height of the images and maintain aspect ratio */
 .carousel-item img {
-    max-width: 400px; /* Ensure the image width doesn't exceed the container */
-    max-height: 450px; /* Ensure the image height doesn't exceed the container */
-    object-fit: contain; /* Ensure the image is fully contained without distortion */
+    width: 100%;
+    height: auto;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;
 }
 
-/* Hover effect for images */
+/* Hover effect for the images */
+.carousel-item img:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
 
 /* Controls Styling */
 .carousel-control-prev,
@@ -208,15 +200,10 @@ footer {
 /* Make carousel container responsive */
 @media (max-width: 768px) {
     .carousel-inner {
-        height: 300px; /* Reduce the height for mobile screens */
+        max-height: 300px; /* Reduce the height on smaller screens */
     }
-
-    .carousel-item {
-        height: 300px; /* Adjust item height for mobile screens */
-    }
-
     .carousel-item img {
-        height: 400px /* Adjust image height */
+        height: 100%; /* Adjust image height */
     }
 }
 

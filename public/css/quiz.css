@@ -1,21 +1,89 @@
 body {
     font-family: 'Arial', sans-serif;
-    background: #f9f9f9;
+    background: #200310;
     text-align: center;
     padding: 20px;
 }
 
+
+/* ===== Footer Styling ===== */
+.footer {
+    background: #1e1e2e;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 16px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== Social Icons Styling ===== */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    color: white;
+    font-size: 24px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #1E1E2E;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+.navbar a {
+    color: #FFD700;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #ff007f;
+}
+
+.navbar .material-symbols-outlined {
+    font-size: 24px;
+    vertical-align: middle;
+}
+/* Custom colors for each social media icon */
+.social-icon:nth-child(1) { color: #1877F2; } /* Facebook */
+.social-icon:nth-child(2) { color: #1DA1F2; } /* Twitter */
+.social-icon:nth-child(3) { color: #E1306C; } /* Instagram */
+.social-icon:nth-child(4) { color: #0077B5; } /* LinkedIn */
+/* Google Translate Button */
 .quiz-container {
     max-width: 600px;
     margin: auto;
-    background: white;
+    background: rgb(227, 235, 7);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .quiz-question {
-    background: #f0f0f0;
+    background: #1E1E2E;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -51,4 +119,151 @@ button:hover {
     font-size: 18px;
     color: red;
     margin-bottom: 15px;
+}
+/* General Styles for Quiz Section */
+#quizForm {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #1E1E2E;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+.quiz-question {
+    margin-bottom: 20px;
+}
+
+.quiz-question label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.answer-radio {
+    margin-right: 5px;
+    cursor: pointer;
+    accent-color: #FFD700; /* Color for radio button when selected */
+}
+
+/* Custom label styles for the radio buttons */
+.quiz-question label {
+    display: block;
+    background: #2A2A3A;
+    padding: 10px 20px;
+    margin-top: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Hover and active state for labels */
+.quiz-question label:hover, .quiz-question label:active {
+    background-color: #3A3B3C;
+    transform: scale(1.03);
+}
+
+/* Button Styling */
+#submitBtn, #retryQuizBtn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: #28A745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+#submitBtn:hover, #retryQuizBtn:hover {
+    background: #45C267;
+    transform: translateY(-2px);
+}
+
+.result-message {
+    text-align: center;
+    background: #1E1E2E;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #FFD700;
+    font-size: 18px;
+}
+
+.result-message p {
+    margin: 10px 0;
+}
+
+/* If attempts are exhausted */
+.result-message p:last-child {
+    color: #FF4757;
+    font-weight: bold;
+}
+h1{
+    font-size: 18px;
+    color: #FFD700;
+}
+.translate-button {
+    background-color: #28A745; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Hover Effect for Translate Button */
+.translate-button:hover {
+    background-color: #218838;
+}
+
+/* Google Translate Widget */
+#google_translate_element {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: none; /* Initially hidden */
+}
+
+#google_translate_element select {
+    background-color: #1E1E2E;
+    color: #FFD700; /* Gold color for dropdown text */
+    border: 1px solid #FFD700;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#google_translate_element select:hover {
+    background-color: #FFD700;
+    color: #1E1E2E;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 768px) {
+    #google_translate_element {
+        top: 10px;
+        right: 10px;
+    }
+
+    .translate-button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
 }
