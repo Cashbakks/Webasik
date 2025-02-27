@@ -14,9 +14,15 @@
         .quiz-question {
             margin-bottom: 15px;
         }
+        #quizQuestions {
+            display: none;
+        }
+        #submitBtn {
+            display: none; /* Hide the submit button initially */
+        }
     </style>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-      <link rel="stylesheet" href="/css/quiz.css">
+    <link rel="stylesheet" href="/css/quiz.css">
 </head>
 <body>
 
@@ -27,8 +33,6 @@
         <a href="/users/logout">Logout</a>
     </nav>
     <button id="translateButton" class="translate-button">Translate Page</button>
-    
-   
     <div id="google_translate_element"></div>
 </header>
 
@@ -39,18 +43,11 @@
 </div>
 
 <!-- Show result message if available -->
-<% if (resultMessage) { %>
-    <div class="result-message">
-        <p><%= resultMessage %></p>
-        <p>You received a <%= discount %>% discount!</p>
-        <% if (attemptsLeft > 0) { %>
-            <button id="retryQuizBtn" onclick="retryQuiz()">Retry Quiz</button>
-        <% } else { %>
-            <p>You have reached the maximum number of attempts.</p>
-        <% } %>
-    </div>
-<% } else { %>
-    <!-- Show quiz questions if resultMessage is not present -->
+
+    <!-- Show Start Quiz Button -->
+    <button id="startQuizBtn" class="start-quiz-button">Start Quiz</button>
+
+    <!-- Show quiz questions when the quiz starts -->
     <form id="quizForm" action="/quiz/submit/<%= attemptId %>" method="POST">
         <div id="quizQuestions">
             <% questions.forEach((question, index) => { %>
@@ -62,11 +59,26 @@
                     <% }) %>
                 </div>
             <% }) %>
+            <button type="submit" id="submitBtn">Submit Quiz</button> 
         </div>
     
-        <button type="submit" id="submitBtn">Submit Quiz</button> <!-- Ensure this is inside the form -->
+       
     </form>
-<% } %>
+    <% if (resultMessage) { %>
+        <div class="result-message">
+            <p><%= resultMessage %></p>
+            <!-- Ensure discount is defined before using it -->
+            <p>You received a <%= discount || 0 %>% discount!</p>
+            <% if (attemptsLeft > 0) { %>
+                <button id="retryQuizBtn" onclick="retryQuiz()">Retry Quiz</button>
+            <% } else { %>
+                <p>You have reached the maximum number of attempts.</p>
+            <% } %>
+        </div>
+    <% } else { %>
+        <!-- Rest of the quiz code here -->
+    <% } %>
+    
 
 <script>
     let timeRemaining = 60; // Starting time in seconds
@@ -114,13 +126,40 @@
         }).then(response => response.json())
           .then(result => {
             if (result.success) {
-                alert(`Your score is: ${result.score}/5. You got a ${result.discount}% discount!`);
+                alert(`Your score is: ${result.score}/5. Your current ${result.discount}% discount!`);
                 location.reload(); // Reload the page to show the updated result
             } else {
                 alert("Failed to submit quiz. Please try again.");
             }
         }).catch(error => console.error("Error submitting quiz:", error));
     }
+
+    // Allow the user to retry the quiz manually
+    function retryQuiz() {
+        window.location.href = '/quiz/start';
+    }
+
+    // Start the timer when the first radio button is clicked
+    radioButtons.forEach((button) => {
+        button.addEventListener('click', startTimer);
+    });
+
+    // Start quiz when the Start Quiz button is clicked
+    document.getElementById('startQuizBtn').addEventListener('click', function() {
+        // Hide the Start Quiz button after it's clicked
+        document.getElementById('startQuizBtn').style.display = 'none';
+
+        // Start the timer
+        startTimer();
+
+        // Start the quiz (showing the questions)
+        document.getElementById('quizQuestions').style.display = 'block';
+
+        // Show the submit button
+        submitBtn.style.display = 'inline-block';
+    });
+   
+
 
     // Allow the user to retry the quiz manually
     function retryQuiz() {
@@ -170,6 +209,8 @@
             input.checked = false;
         });
     });
+
+    // Translate button
     document.getElementById('translateButton').addEventListener('click', function() {
         const translateElement = document.getElementById("google_translate_element");
         if (translateElement.style.display === "none") {
@@ -188,6 +229,7 @@
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE
         }, 'google_translate_element');
     }
+ 
 </script>
 
 </body>

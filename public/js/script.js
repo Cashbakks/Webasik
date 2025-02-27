@@ -106,21 +106,3 @@ document.getElementById('minPrice').addEventListener('keyup', filterProducts);
 document.getElementById('maxPrice').addEventListener('keyup', filterProducts);
 document.getElementById('filterButton').addEventListener('click', filterProducts);
 
-document.getElementById('translateButton').addEventListener('click', function() {
-    const translateElement = document.getElementById("google_translate_element");
-    if (!translateElement) {
-        const div = document.createElement('div');
-        div.id = "google_translate_element";
-        document.body.appendChild(div);
-        googleTranslateElementInit();  // Initialize translation when clicked
-    }
-});
-
-// Initialize Google Translate Element
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'en',  // Default language of the page
-        includedLanguages: 'en,es,fr,de,it,pt,ru', // Languages you want to support
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-}
