@@ -124,7 +124,7 @@ router.post('/profile', isAuthenticated, async (req, res) => {
 
         // Refresh session data
         req.session.user = updatedUser;
-        res.redirect('/profile');
+        res.redirect('/users/profile');
     } catch (error) {
         console.error('Error updating user profile:', error);
         res.status(500).send('Failed to update profile');
