@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take the Quiz</title>
+    <style>
+        .timer {
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .quiz-question {
+            margin-bottom: 15px;
+        }
+        #quizQuestions {
+            display: none;
+        }
+        #submitBtn {
+            display: none; /* Hide the submit button initially */
+        }
+    </style>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <link rel="stylesheet" href="/css/quiz.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/questions">Quiz Questions</a>
+        <a href="/users/logout">Logout</a>
+    </nav>
+    <button id="translateButton" class="translate-button">Translate Page</button>
+    <div id="google_translate_element"></div>
+</header>
+
+<h1>Take the Quiz</h1>
+
+<div class="timer">
+    <p>Time Remaining: <span id="timeRemaining">60</span> seconds</p>
+</div>
+
+<!-- Show result message if available -->
+
+    <!-- Show Start Quiz Button -->
+    <button id="startQuizBtn" class="start-quiz-button">Start Quiz</button>
+
+    <!-- Show quiz questions when the quiz starts -->
+    <form id="quizForm" action="/quiz/submit/<%= attemptId %>" method="POST">
+        <div id="quizQuestions">
+            <% questions.forEach((question, index) => { %>
+                <div class="quiz-question">
+                    <label><%= question.question %></label>
+                    <% question.answers.forEach((answer, i) => { %>
+                        <input type="radio" name="question<%= index %>" value="<%= answer.text %>" id="answer<%= index %>_<%= i %>" class="answer-radio">
+                        <label for="answer<%= index %>_<%= i %>"><%= answer.text %></label><br>
+                    <% }) %>
+                </div>
+            <% }) %>
+            <button type="submit" id="submitBtn">Submit Quiz</button> 
+        </div>
+    
+       
+    </form>
+    <% if (resultMessage) { %>
+        <div class="result-message">
+            <p><%= resultMessage %></p>
+            <!-- Ensure discount is defined before using it -->
+            <p>You received a <%= discount || 0 %>% discount!</p>
+            <% if (attemptsLeft > 0) { %>
+                <button id="retryQuizBtn" onclick="retryQuiz()">Retry Quiz</button>
+            <% } else { %>
+                <p>You have reached the maximum number of attempts.</p>
+            <% } %>
+        </div>
+    <% } else { %>
+        <!-- Rest of the quiz code here -->
+    <% } %>
+    
+
+<script>
+    let timeRemaining = 60; // Starting time in seconds
+    const timeDisplay = document.getElementById("timeRemaining");
+    const submitBtn = document.getElementById("submitBtn");
+    const radioButtons = document.querySelectorAll('.answer-radio');
+    let timer;
+    let timerStarted = false;
+
+    // Start the countdown timer
+    function startTimer() {
+        if (!timerStarted) {
+            timerStarted = true;
+            timer = setInterval(() => {
+                timeRemaining--;
+                timeDisplay.innerText = timeRemaining;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    alert("Time is up! Your quiz will be submitted automatically.");
+                    autoSubmitQuiz();
+                }
+            }, 1000);
+        }
+    }
+
+    // Automatically submit the quiz when time runs out
+    function autoSubmitQuiz() {
+        const answers = [];
+        const questionElements = document.querySelectorAll('.quiz-question');
+
+        questionElements.forEach((question, index) => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            answers.push(selectedAnswer ? selectedAnswer.value : '');
+        });
+
+        const attemptId = "<%= attemptId %>";  // Ensure this is the correct attempt ID
+
+        fetch(`/quiz/submit/${attemptId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answers })
+        }).then(response => response.json())
+          .then(result => {
+            if (result.success) {
+                alert(`Your score is: ${result.score}/5. Your current ${result.discount}% discount!`);
+                location.reload(); // Reload the page to show the updated result
+            } else {
+                alert("Failed to submit quiz. Please try again.");
+            }
+        }).catch(error => console.error("Error submitting quiz:", error));
+    }
+
+    // Allow the user to retry the quiz manually
+    function retryQuiz() {
+        window.location.href = '/quiz/start';
+    }
+
+    // Start the timer when the first radio button is clicked
+    radioButtons.forEach((button) => {
+        button.addEventListener('click', startTimer);
+    });
+
+    // Start quiz when the Start Quiz button is clicked
+    document.getElementById('startQuizBtn').addEventListener('click', function() {
+        // Hide the Start Quiz button after it's clicked
+        document.getElementById('startQuizBtn').style.display = 'none';
+
+        // Start the timer
+        startTimer();
+
+        // Start the quiz (showing the questions)
+        document.getElementById('quizQuestions').style.display = 'block';
+
+        // Show the submit button
+        submitBtn.style.display = 'inline-block';
+    });
+   
+
+
+    // Allow the user to retry the quiz manually
+    function retryQuiz() {
+        window.location.href = '/quiz/start';
+    }
+
+    // Start the timer when the first radio button is clicked
+    radioButtons.forEach((button) => {
+        button.addEventListener('click', startTimer);
+    });
+
+    // Manual form submission
+    document.getElementById("quizForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevents the default form submission
+
+        // Stop the timer when the user submits manually
+        clearInterval(timer);
+
+        const answers = [];
+        const questionElements = document.querySelectorAll('.quiz-question');
+        
+        questionElements.forEach((question, index) => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            answers.push(selectedAnswer ? selectedAnswer.value : '');
+        });
+
+        const attemptId = "<%= attemptId %>";  // Ensure this is the correct attempt ID
+
+        fetch(`/quiz/submit/${attemptId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answers })
+        }).then(response => response.json())
+          .then(result => {
+            if (result.success) {
+                alert(`Your score is: ${result.score}/5. You got a ${result.discount}% discount!`);
+                location.reload(); // Reload the page to show the updated result
+            } else {
+                alert("Failed to submit quiz. Please try again.");
+            }
+        }).catch(error => console.error("Error submitting quiz:", error));
+        
+        // Clear radio button selections after submission
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.checked = false;
+        });
+    });
+
+    // Translate button
+    document.getElementById('translateButton').addEventListener('click', function() {
+        const translateElement = document.getElementById("google_translate_element");
+        if (translateElement.style.display === "none") {
+            translateElement.style.display = "block";  // Show the translate widget
+            googleTranslateElementInit();  // Initialize Google Translate
+        } else {
+            translateElement.style.display = "none";  // Hide the translate widget
+        }
+    });
+
+    // Initialize Google Translate Element
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',  // Default language of the page
+            includedLanguages: 'en,es,fr,de,it,pt,ru', // Languages you want to support
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+ 
+</script>
+
+</body>
+</html>

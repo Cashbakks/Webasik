@@ -2,6 +2,20 @@
  
 # 🛍️ Shoe Store E-Commerce Platform
 
+
+ # AI Shoe Generator – README Update
+ Overview
+
+AI Shoe Generator is a web application that allows users to generate AI-designed shoes based on textual descriptions. It integrates with Stability AI for image generation and ImgBB for image hosting. Users can generate shoes, view their past creations, and manage their AI-generated designs.
+ Features
+
+** AI-powered shoe generation via Stability AI
+** Image storage with ImgBB (or Base64 encoding)
+** User authentication to save and retrieve designs
+** Modern UI for a smooth experience
+
+# Api key has limited 25 credits
+
 ## 📌 Overview
 Shoe Store is a **modern e-commerce web application** designed to provide a seamless shopping experience for customers looking for high-quality footwear. The platform features a **user-friendly interface**, advanced product filtering, a **secure authentication system**, and an **interactive shopping basket** with real-time **currency conversion**.
 

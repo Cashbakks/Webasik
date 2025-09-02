@@ -105,3 +105,4 @@ document.getElementById('companyFilter').addEventListener('change', filterProduc
 document.getElementById('minPrice').addEventListener('keyup', filterProducts);
 document.getElementById('maxPrice').addEventListener('keyup', filterProducts);
 document.getElementById('filterButton').addEventListener('click', filterProducts);
+
